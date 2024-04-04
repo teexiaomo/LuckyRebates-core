@@ -1,0 +1,102 @@
+type ClaimPrize @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  winner: Bytes! # address
+  totalAmount: BigInt! # uint256
+  autoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DefaultChange @entity(immutable: true) {
+  id: Bytes!
+  defaultTicketPirce: BigInt! # uint256
+  defaultAutoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NewOperatorAddress @entity(immutable: true) {
+  id: Bytes!
+  operatorAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PrizeDrawn @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  winner: Bytes! # address
+  index: BigInt! # uint256
+  amount: BigInt! # uint256
+  autoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RedEnvelopeClaimable @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  endTime: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RedEnvelopeClosed @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  endTime: BigInt! # uint256
+  userTickets: BigInt! # uint256
+  injectTickets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RedEnvelopeCreated @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  startTime: BigInt! # uint256
+  endTime: BigInt! # uint256
+  maxTickets: BigInt! # uint256
+  ticketPirce: BigInt! # uint256
+  autoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TicketsInject @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  sender: Bytes! # address
+  ticketNumbers: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TicketsPurchase @entity(immutable: true) {
+  id: Bytes!
+  LuckyRedEnvelope_id: BigInt! # uint256
+  sender: Bytes! # address
+  receiveAddress: Bytes! # address
+  ticketNumbers: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
