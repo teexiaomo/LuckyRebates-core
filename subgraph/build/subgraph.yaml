@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: LuckyRedEnvelope
@@ -30,7 +30,7 @@ dataSources:
         - UserInfo
       abis:
         - name: LuckyRedEnvelope
-          file: ./abis/LuckyRedEnvelope.json
+          file: LuckyRedEnvelope/abis/LuckyRedEnvelope.json
       eventHandlers:
         - event: ClaimPrize(indexed uint256,indexed address,uint256,bool)
           handler: handleClaimPrize
@@ -52,4 +52,4 @@ dataSources:
           handler: handleTicketsInject
         - event: TicketsPurchase(indexed uint256,indexed address,indexed address,uint256)
           handler: handleTicketsPurchase
-      file: ./src/lucky-red-envelope.ts
+      file: LuckyRedEnvelope/LuckyRedEnvelope.wasm

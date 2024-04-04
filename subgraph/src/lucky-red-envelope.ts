@@ -1,3 +1,4 @@
+import { bigInt } from "@graphprotocol/graph-ts"
 import {
   ClaimPrize as ClaimPrizeEvent,
   DefaultChange as DefaultChangeEvent,
@@ -11,6 +12,8 @@ import {
   TicketsPurchase as TicketsPurchaseEvent
 } from "../generated/LuckyRedEnvelope/LuckyRedEnvelope"
 import {
+  RedEnvelope,
+  UserInfo,
   ClaimPrize,
   DefaultChange,
   NewOperatorAddress,
@@ -22,10 +25,14 @@ import {
   TicketsInject,
   TicketsPurchase
 } from "../generated/schema"
+import {
+  BigInt,
+  Bytes
+}from "@graphprotocol/graph-ts"
 
 export function handleClaimPrize(event: ClaimPrizeEvent): void {
   let entity = new ClaimPrize(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    Bytes.fromUTF8(event.params.id.toString() + event.params.winner.toString())
   )
   entity.LuckyRedEnvelope_id = event.params.id
   entity.winner = event.params.winner
@@ -35,6 +42,11 @@ export function handleClaimPrize(event: ClaimPrizeEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+  
+
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  entity.redEnvelope = id
+  entity.userInfo = event.params.winner
 
   entity.save()
 }
@@ -50,7 +62,7 @@ export function handleDefaultChange(event: DefaultChangeEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  entity.save()
+  entity.save()   
 }
 
 export function handleNewOperatorAddress(event: NewOperatorAddressEvent): void {
@@ -96,14 +108,18 @@ export function handlePrizeDrawn(event: PrizeDrawnEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
+  entity.redEnvelope = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  entity.userInfo = event.params.winner
+  entity.claimPrize = Bytes.fromUTF8(event.params.id.toString() + event.params.winner.toString())
   entity.save()
 }
 
 export function handleRedEnvelopeClaimable(
   event: RedEnvelopeClaimableEvent
 ): void {
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
   let entity = new RedEnvelopeClaimable(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    id
   )
   entity.LuckyRedEnvelope_id = event.params.id
   entity.endTime = event.params.endTime
@@ -112,12 +128,20 @@ export function handleRedEnvelopeClaimable(
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
+  let redEnvelope = RedEnvelope.load(id)
+  if (redEnvelope != null){
+    redEnvelope.status = 3
+    redEnvelope.save()
+  }
+  entity.redEnvelope = id
+
   entity.save()
 }
 
 export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
   let entity = new RedEnvelopeClosed(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    id
   )
   entity.LuckyRedEnvelope_id = event.params.id
   entity.endTime = event.params.endTime
@@ -128,12 +152,30 @@ export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
+  let redEnvelope = RedEnvelope.load(id)
+  if (redEnvelope != null){
+    redEnvelope.status = 2
+    redEnvelope.save()
+  }
+  
+  entity.redEnvelope = id
   entity.save()
 }
 
 export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let redEnvelope = new RedEnvelope(
+    id
+  )
+  redEnvelope.LuckyRedEnvelope_id = event.params.id
+  redEnvelope.status = 1
+  redEnvelope.userTickets = new BigInt(0)
+  redEnvelope.injectTickets = new BigInt(0)
+  redEnvelope.userAddrNum = new BigInt(0)
+  redEnvelope.save()
+
   let entity = new RedEnvelopeCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    id
   )
   entity.LuckyRedEnvelope_id = event.params.id
   entity.startTime = event.params.startTime
@@ -145,8 +187,10 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
+  entity.redEnvelope = id
+  
   entity.save()
+
 }
 
 export function handleTicketsInject(event: TicketsInjectEvent): void {
@@ -160,11 +204,27 @@ export function handleTicketsInject(event: TicketsInjectEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+  
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  entity.redEnvelope = id
 
   entity.save()
-}
+  
+  let redEnvelope = RedEnvelope.load(id)
+  if (redEnvelope != null){
+    redEnvelope.injectTickets = redEnvelope.injectTickets.plus(event.params.ticketNumbers)
+    redEnvelope.save()
+  }
+} 
 
 export function handleTicketsPurchase(event: TicketsPurchaseEvent): void {
+  let userInfo = UserInfo.load(event.params.receiveAddress)
+  if (userInfo == null ){
+    userInfo = new UserInfo(event.params.receiveAddress)
+    userInfo.address = event.params.receiveAddress
+    userInfo.save()
+  } 
+
   let entity = new TicketsPurchase(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -177,5 +237,16 @@ export function handleTicketsPurchase(event: TicketsPurchaseEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
+  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+ 
+  entity.redEnvelope = id
+  entity.userInfo = event.params.receiveAddress
+
   entity.save()
+
+  let redEnvelope = RedEnvelope.load(id)
+  if (redEnvelope != null){
+    redEnvelope.userTickets = redEnvelope.userTickets.plus(event.params.ticketNumbers)
+    redEnvelope.save()
+  }
 }
