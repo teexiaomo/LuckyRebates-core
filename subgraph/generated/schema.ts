@@ -52,19 +52,6 @@ export class UserInfo extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get address(): Bytes {
-    let value = this.get("address");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set address(value: Bytes) {
-    this.set("address", Value.fromBytes(value));
-  }
-
   get ticketsPurchaseList(): TicketsPurchaseLoader {
     return new TicketsPurchaseLoader(
       "UserInfo",
@@ -91,9 +78,9 @@ export class UserInfo extends Entity {
 }
 
 export class RedEnvelope extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -101,49 +88,34 @@ export class RedEnvelope extends Entity {
     assert(id != null, "Cannot save RedEnvelope entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type RedEnvelope must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type RedEnvelope must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("RedEnvelope", id.toBytes().toHexString(), this);
+      store.set("RedEnvelope", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): RedEnvelope | null {
+  static loadInBlock(id: string): RedEnvelope | null {
     return changetype<RedEnvelope | null>(
-      store.get_in_block("RedEnvelope", id.toHexString()),
+      store.get_in_block("RedEnvelope", id),
     );
   }
 
-  static load(id: Bytes): RedEnvelope | null {
-    return changetype<RedEnvelope | null>(
-      store.get("RedEnvelope", id.toHexString()),
-    );
+  static load(id: string): RedEnvelope | null {
+    return changetype<RedEnvelope | null>(store.get("RedEnvelope", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get status(): i64 {
@@ -185,8 +157,21 @@ export class RedEnvelope extends Entity {
     this.set("injectTickets", Value.fromBigInt(value));
   }
 
-  get userAddrNum(): BigInt {
-    let value = this.get("userAddrNum");
+  get autoClaim(): boolean {
+    let value = this.get("autoClaim");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set autoClaim(value: boolean) {
+    this.set("autoClaim", Value.fromBoolean(value));
+  }
+
+  get maxTickets(): BigInt {
+    let value = this.get("maxTickets");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -194,14 +179,57 @@ export class RedEnvelope extends Entity {
     }
   }
 
-  set userAddrNum(value: BigInt) {
-    this.set("userAddrNum", Value.fromBigInt(value));
+  set maxTickets(value: BigInt) {
+    this.set("maxTickets", Value.fromBigInt(value));
+  }
+
+  get ticketPirce(): BigInt {
+    let value = this.get("ticketPirce");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ticketPirce(value: BigInt) {
+    this.set("ticketPirce", Value.fromBigInt(value));
+  }
+
+  get startTimestamp(): BigInt {
+    let value = this.get("startTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set startTimestamp(value: BigInt) {
+    this.set("startTimestamp", Value.fromBigInt(value));
+  }
+
+  get endTimeTimestamp(): BigInt | null {
+    let value = this.get("endTimeTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTimeTimestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("endTimeTimestamp");
+    } else {
+      this.set("endTimeTimestamp", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get createdEvent(): RedEnvelopeCreatedLoader {
     return new RedEnvelopeCreatedLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "createdEvent",
     );
   }
@@ -209,7 +237,7 @@ export class RedEnvelope extends Entity {
   get closedEvent(): RedEnvelopeClosedLoader {
     return new RedEnvelopeClosedLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "closedEvent",
     );
   }
@@ -217,7 +245,7 @@ export class RedEnvelope extends Entity {
   get claimableEvent(): RedEnvelopeClaimableLoader {
     return new RedEnvelopeClaimableLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "claimableEvent",
     );
   }
@@ -225,7 +253,7 @@ export class RedEnvelope extends Entity {
   get ticketsInjectList(): TicketsInjectLoader {
     return new TicketsInjectLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "ticketsInjectList",
     );
   }
@@ -233,7 +261,7 @@ export class RedEnvelope extends Entity {
   get ticketsPurchaseList(): TicketsPurchaseLoader {
     return new TicketsPurchaseLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "ticketsPurchaseList",
     );
   }
@@ -241,7 +269,7 @@ export class RedEnvelope extends Entity {
   get prizeDrawnList(): PrizeDrawnLoader {
     return new PrizeDrawnLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "prizeDrawnList",
     );
   }
@@ -249,7 +277,7 @@ export class RedEnvelope extends Entity {
   get claimPrizeList(): ClaimPrizeLoader {
     return new ClaimPrizeLoader(
       "RedEnvelope",
-      this.get("id")!.toBytes().toHexString(),
+      this.get("id")!.toString(),
       "claimPrizeList",
     );
   }
@@ -296,19 +324,6 @@ export class ClaimPrize extends Entity {
 
   set id(value: Bytes) {
     this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
   }
 
   get winner(): Bytes {
@@ -389,17 +404,17 @@ export class ClaimPrize extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 
   get userInfo(): Bytes {
@@ -781,19 +796,6 @@ export class PrizeDrawn extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
-  }
-
   get winner(): Bytes {
     let value = this.get("winner");
     if (!value || value.kind == ValueKind.NULL) {
@@ -885,17 +887,17 @@ export class PrizeDrawn extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 
   get userInfo(): Bytes {
@@ -930,9 +932,9 @@ export class PrizeDrawn extends Entity {
 }
 
 export class RedEnvelopeClaimable extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -940,62 +942,36 @@ export class RedEnvelopeClaimable extends Entity {
     assert(id != null, "Cannot save RedEnvelopeClaimable entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type RedEnvelopeClaimable must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type RedEnvelopeClaimable must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("RedEnvelopeClaimable", id.toBytes().toHexString(), this);
+      store.set("RedEnvelopeClaimable", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): RedEnvelopeClaimable | null {
+  static loadInBlock(id: string): RedEnvelopeClaimable | null {
     return changetype<RedEnvelopeClaimable | null>(
-      store.get_in_block("RedEnvelopeClaimable", id.toHexString()),
+      store.get_in_block("RedEnvelopeClaimable", id),
     );
   }
 
-  static load(id: Bytes): RedEnvelopeClaimable | null {
+  static load(id: string): RedEnvelopeClaimable | null {
     return changetype<RedEnvelopeClaimable | null>(
-      store.get("RedEnvelopeClaimable", id.toHexString()),
+      store.get("RedEnvelopeClaimable", id),
     );
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
-  }
-
-  get endTime(): BigInt {
-    let value = this.get("endTime");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set endTime(value: BigInt) {
-    this.set("endTime", Value.fromBigInt(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get blockNumber(): BigInt {
@@ -1037,24 +1013,24 @@ export class RedEnvelopeClaimable extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 }
 
 export class RedEnvelopeClosed extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -1062,88 +1038,36 @@ export class RedEnvelopeClosed extends Entity {
     assert(id != null, "Cannot save RedEnvelopeClosed entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type RedEnvelopeClosed must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type RedEnvelopeClosed must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("RedEnvelopeClosed", id.toBytes().toHexString(), this);
+      store.set("RedEnvelopeClosed", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): RedEnvelopeClosed | null {
+  static loadInBlock(id: string): RedEnvelopeClosed | null {
     return changetype<RedEnvelopeClosed | null>(
-      store.get_in_block("RedEnvelopeClosed", id.toHexString()),
+      store.get_in_block("RedEnvelopeClosed", id),
     );
   }
 
-  static load(id: Bytes): RedEnvelopeClosed | null {
+  static load(id: string): RedEnvelopeClosed | null {
     return changetype<RedEnvelopeClosed | null>(
-      store.get("RedEnvelopeClosed", id.toHexString()),
+      store.get("RedEnvelopeClosed", id),
     );
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
-  }
-
-  get endTime(): BigInt {
-    let value = this.get("endTime");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set endTime(value: BigInt) {
-    this.set("endTime", Value.fromBigInt(value));
-  }
-
-  get userTickets(): BigInt {
-    let value = this.get("userTickets");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set userTickets(value: BigInt) {
-    this.set("userTickets", Value.fromBigInt(value));
-  }
-
-  get injectTickets(): BigInt {
-    let value = this.get("injectTickets");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set injectTickets(value: BigInt) {
-    this.set("injectTickets", Value.fromBigInt(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get blockNumber(): BigInt {
@@ -1185,24 +1109,24 @@ export class RedEnvelopeClosed extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 }
 
 export class RedEnvelopeCreated extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -1210,40 +1134,40 @@ export class RedEnvelopeCreated extends Entity {
     assert(id != null, "Cannot save RedEnvelopeCreated entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type RedEnvelopeCreated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.STRING,
+        `Entities of type RedEnvelopeCreated must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("RedEnvelopeCreated", id.toBytes().toHexString(), this);
+      store.set("RedEnvelopeCreated", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): RedEnvelopeCreated | null {
+  static loadInBlock(id: string): RedEnvelopeCreated | null {
     return changetype<RedEnvelopeCreated | null>(
-      store.get_in_block("RedEnvelopeCreated", id.toHexString()),
+      store.get_in_block("RedEnvelopeCreated", id),
     );
   }
 
-  static load(id: Bytes): RedEnvelopeCreated | null {
+  static load(id: string): RedEnvelopeCreated | null {
     return changetype<RedEnvelopeCreated | null>(
-      store.get("RedEnvelopeCreated", id.toHexString()),
+      store.get("RedEnvelopeCreated", id),
     );
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
+  get setEndTime(): BigInt {
+    let value = this.get("setEndTime");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1251,12 +1175,12 @@ export class RedEnvelopeCreated extends Entity {
     }
   }
 
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
+  set setEndTime(value: BigInt) {
+    this.set("setEndTime", Value.fromBigInt(value));
   }
 
-  get startTime(): BigInt {
-    let value = this.get("startTime");
+  get setMaxTickets(): BigInt {
+    let value = this.get("setMaxTickets");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1264,51 +1188,12 @@ export class RedEnvelopeCreated extends Entity {
     }
   }
 
-  set startTime(value: BigInt) {
-    this.set("startTime", Value.fromBigInt(value));
+  set setMaxTickets(value: BigInt) {
+    this.set("setMaxTickets", Value.fromBigInt(value));
   }
 
-  get endTime(): BigInt {
-    let value = this.get("endTime");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set endTime(value: BigInt) {
-    this.set("endTime", Value.fromBigInt(value));
-  }
-
-  get maxTickets(): BigInt {
-    let value = this.get("maxTickets");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set maxTickets(value: BigInt) {
-    this.set("maxTickets", Value.fromBigInt(value));
-  }
-
-  get ticketPirce(): BigInt {
-    let value = this.get("ticketPirce");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set ticketPirce(value: BigInt) {
-    this.set("ticketPirce", Value.fromBigInt(value));
-  }
-
-  get autoClaim(): boolean {
-    let value = this.get("autoClaim");
+  get setAutoClaim(): boolean {
+    let value = this.get("setAutoClaim");
     if (!value || value.kind == ValueKind.NULL) {
       return false;
     } else {
@@ -1316,8 +1201,21 @@ export class RedEnvelopeCreated extends Entity {
     }
   }
 
-  set autoClaim(value: boolean) {
-    this.set("autoClaim", Value.fromBoolean(value));
+  set setAutoClaim(value: boolean) {
+    this.set("setAutoClaim", Value.fromBoolean(value));
+  }
+
+  get setTicketPirce(): BigInt {
+    let value = this.get("setTicketPirce");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set setTicketPirce(value: BigInt) {
+    this.set("setTicketPirce", Value.fromBigInt(value));
   }
 
   get blockNumber(): BigInt {
@@ -1359,17 +1257,17 @@ export class RedEnvelopeCreated extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 }
 
@@ -1414,19 +1312,6 @@ export class TicketsInject extends Entity {
 
   set id(value: Bytes) {
     this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
   }
 
   get sender(): Bytes {
@@ -1494,17 +1379,17 @@ export class TicketsInject extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 }
 
@@ -1549,19 +1434,6 @@ export class TicketsPurchase extends Entity {
 
   set id(value: Bytes) {
     this.set("id", Value.fromBytes(value));
-  }
-
-  get LuckyRedEnvelope_id(): BigInt {
-    let value = this.get("LuckyRedEnvelope_id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set LuckyRedEnvelope_id(value: BigInt) {
-    this.set("LuckyRedEnvelope_id", Value.fromBigInt(value));
   }
 
   get sender(): Bytes {
@@ -1642,17 +1514,17 @@ export class TicketsPurchase extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
-  get redEnvelope(): Bytes {
+  get redEnvelope(): string {
     let value = this.get("redEnvelope");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set redEnvelope(value: Bytes) {
-    this.set("redEnvelope", Value.fromBytes(value));
+  set redEnvelope(value: string) {
+    this.set("redEnvelope", Value.fromString(value));
   }
 
   get userInfo(): Bytes {

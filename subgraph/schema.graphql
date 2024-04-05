@@ -1,35 +1,41 @@
+#用户详情
 type UserInfo @entity{
-  id: Bytes!
-  address: Bytes! # address
-  ticketsPurchaseList: [TicketsPurchase!]  @derivedFrom(field: "userInfo")  
-  prizeDrawnList: [PrizeDrawn!]  @derivedFrom(field: "userInfo")  
-  claimPrizeList: [ClaimPrize!]  @derivedFrom(field: "userInfo")  
+  id: Bytes!  #用户地址
+  ticketsPurchaseList: [TicketsPurchase!]  @derivedFrom(field: "userInfo")  #购注记录
+  prizeDrawnList: [PrizeDrawn!]  @derivedFrom(field: "userInfo")  #中奖记录
+  claimPrizeList: [ClaimPrize!]  @derivedFrom(field: "userInfo")  #领取记录
 }
 
+#红包详情
 type  RedEnvelope @entity{
-  id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
-  status:   Int8
+  id: String!
+  status:   Int8! #1:open 2:Close  3:Claimable
   
-  userTickets: BigInt! # uint256
-  injectTickets: BigInt! # uint256
+  userTickets: BigInt! # uint256  购注总数
+  injectTickets: BigInt! # uint256  注入总数
 
-  createdEvent: RedEnvelopeCreated  @derivedFrom(field: "redEnvelope")
-  closedEvent: RedEnvelopeClosed    @derivedFrom(field: "redEnvelope")
-  claimableEvent: RedEnvelopeClaimable   @derivedFrom(field: "redEnvelope")
+  autoClaim: Boolean! # bool
+  maxTickets: BigInt! # uint256 
+  ticketPirce: BigInt! # uint256 
+
+  startTimestamp:BigInt!
+  endTimeTimestamp:BigInt
+
+  createdEvent: RedEnvelopeCreated  @derivedFrom(field: "redEnvelope")  #创建事件记录
+  closedEvent: RedEnvelopeClosed    @derivedFrom(field: "redEnvelope")  #停止事件记录
+  claimableEvent: RedEnvelopeClaimable   @derivedFrom(field: "redEnvelope") #开奖事件记录
  
 
-  ticketsInjectList: [TicketsInject!]      @derivedFrom(field: "redEnvelope")  
-  ticketsPurchaseList:[TicketsPurchase!]   @derivedFrom(field: "redEnvelope")  
-  prizeDrawnList: [PrizeDrawn!]    @derivedFrom(field: "redEnvelope")  
-  claimPrizeList: [ClaimPrize!]    @derivedFrom(field: "redEnvelope")  
+  ticketsInjectList: [TicketsInject!]      @derivedFrom(field: "redEnvelope")  #注入记录list
+  ticketsPurchaseList:[TicketsPurchase!]   @derivedFrom(field: "redEnvelope")  #购注记录list
+  prizeDrawnList: [PrizeDrawn!]    @derivedFrom(field: "redEnvelope")  #中奖记录list
+  claimPrizeList: [ClaimPrize!]    @derivedFrom(field: "redEnvelope")  #领奖记录list
 
 }
 
 
 type ClaimPrize @entity(immutable: true) {
   id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
   winner: Bytes! # address
   totalAmount: BigInt! # uint256
   autoClaim: Boolean! # bool
@@ -69,7 +75,6 @@ type OwnershipTransferred @entity(immutable: true) {
 
 type PrizeDrawn @entity(immutable: true) {
   id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
   winner: Bytes! # address
   index: BigInt! # uint256
   amount: BigInt! # uint256
@@ -84,9 +89,7 @@ type PrizeDrawn @entity(immutable: true) {
 }
 
 type RedEnvelopeClaimable @entity(immutable: true) {
-  id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
-  endTime: BigInt! # uint256
+  id: String!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -94,11 +97,7 @@ type RedEnvelopeClaimable @entity(immutable: true) {
 }
 
 type RedEnvelopeClosed @entity(immutable: true) {
-  id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
-  endTime: BigInt! # uint256
-  userTickets: BigInt! # uint256
-  injectTickets: BigInt! # uint256
+  id: String!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -106,13 +105,11 @@ type RedEnvelopeClosed @entity(immutable: true) {
 }
 
 type RedEnvelopeCreated @entity(immutable: true) {
-  id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
-  startTime: BigInt! # uint256
-  endTime: BigInt! # uint256
-  maxTickets: BigInt! # uint256
-  ticketPirce: BigInt! # uint256
-  autoClaim: Boolean! # bool
+  id: String!
+  setEndTime: BigInt! # uint256
+  setMaxTickets: BigInt! # uint256
+  setAutoClaim:Boolean!
+  setTicketPirce: BigInt! # uint256 
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -121,7 +118,6 @@ type RedEnvelopeCreated @entity(immutable: true) {
 
 type TicketsInject @entity(immutable: true) {
   id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
   sender: Bytes! # address
   ticketNumbers: BigInt! # uint256
   blockNumber: BigInt!
@@ -133,7 +129,6 @@ type TicketsInject @entity(immutable: true) {
 
 type TicketsPurchase @entity(immutable: true) {
   id: Bytes!
-  LuckyRedEnvelope_id: BigInt! # uint256
   sender: Bytes! # address
   receiveAddress: Bytes! # address
   ticketNumbers: BigInt! # uint256

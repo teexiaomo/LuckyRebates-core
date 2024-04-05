@@ -34,7 +34,7 @@ export function handleClaimPrize(event: ClaimPrizeEvent): void {
   let entity = new ClaimPrize(
     Bytes.fromUTF8(event.params.id.toString() + event.params.winner.toString())
   )
-  entity.LuckyRedEnvelope_id = event.params.id
+  
   entity.winner = event.params.winner
   entity.totalAmount = event.params.totalAmount
   entity.autoClaim = event.params.autoClaim
@@ -44,7 +44,7 @@ export function handleClaimPrize(event: ClaimPrizeEvent): void {
   entity.transactionHash = event.transaction.hash
   
 
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
   entity.redEnvelope = id
   entity.userInfo = event.params.winner
 
@@ -98,7 +98,7 @@ export function handlePrizeDrawn(event: PrizeDrawnEvent): void {
   let entity = new PrizeDrawn(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.LuckyRedEnvelope_id = event.params.id
+  
   entity.winner = event.params.winner
   entity.index = event.params.index
   entity.amount = event.params.amount
@@ -108,7 +108,7 @@ export function handlePrizeDrawn(event: PrizeDrawnEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  entity.redEnvelope = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  entity.redEnvelope = event.params.id.toString()
   entity.userInfo = event.params.winner
   entity.claimPrize = Bytes.fromUTF8(event.params.id.toString() + event.params.winner.toString())
   entity.save()
@@ -117,12 +117,10 @@ export function handlePrizeDrawn(event: PrizeDrawnEvent): void {
 export function handleRedEnvelopeClaimable(
   event: RedEnvelopeClaimableEvent
 ): void {
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
   let entity = new RedEnvelopeClaimable(
     id
   )
-  entity.LuckyRedEnvelope_id = event.params.id
-  entity.endTime = event.params.endTime
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -139,14 +137,10 @@ export function handleRedEnvelopeClaimable(
 }
 
 export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
   let entity = new RedEnvelopeClosed(
     id
   )
-  entity.LuckyRedEnvelope_id = event.params.id
-  entity.endTime = event.params.endTime
-  entity.userTickets = event.params.userTickets
-  entity.injectTickets = event.params.injectTickets
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -155,6 +149,10 @@ export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
   let redEnvelope = RedEnvelope.load(id)
   if (redEnvelope != null){
     redEnvelope.status = 2
+    redEnvelope.endTimeTimestamp = event.params.endTime
+    redEnvelope.userTickets = event.params.userTickets
+    redEnvelope.injectTickets = event.params.injectTickets
+
     redEnvelope.save()
   }
   
@@ -163,26 +161,27 @@ export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
 }
 
 export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
   let redEnvelope = new RedEnvelope(
     id
   )
-  redEnvelope.LuckyRedEnvelope_id = event.params.id
   redEnvelope.status = 1
   redEnvelope.userTickets = new BigInt(0)
   redEnvelope.injectTickets = new BigInt(0)
-  redEnvelope.userAddrNum = new BigInt(0)
+  redEnvelope.startTimestamp = event.params.startTime
+  redEnvelope.maxTickets = event.params.maxTickets
+  redEnvelope.ticketPirce = event.params.ticketPirce
+  redEnvelope.autoClaim = event.params.autoClaim
   redEnvelope.save()
 
   let entity = new RedEnvelopeCreated(
     id
   )
-  entity.LuckyRedEnvelope_id = event.params.id
-  entity.startTime = event.params.startTime
-  entity.endTime = event.params.endTime
-  entity.maxTickets = event.params.maxTickets
-  entity.ticketPirce = event.params.ticketPirce
-  entity.autoClaim = event.params.autoClaim
+  
+  entity.setEndTime = event.params.endTime
+  entity.setMaxTickets = event.params.maxTickets
+  entity.setTicketPirce = event.params.ticketPirce
+  entity.setAutoClaim = event.params.autoClaim
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -197,7 +196,7 @@ export function handleTicketsInject(event: TicketsInjectEvent): void {
   let entity = new TicketsInject(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.LuckyRedEnvelope_id = event.params.id
+  
   entity.sender = event.params.sender
   entity.ticketNumbers = event.params.ticketNumbers
 
@@ -205,7 +204,7 @@ export function handleTicketsInject(event: TicketsInjectEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
   
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
   entity.redEnvelope = id
 
   entity.save()
@@ -221,14 +220,13 @@ export function handleTicketsPurchase(event: TicketsPurchaseEvent): void {
   let userInfo = UserInfo.load(event.params.receiveAddress)
   if (userInfo == null ){
     userInfo = new UserInfo(event.params.receiveAddress)
-    userInfo.address = event.params.receiveAddress
     userInfo.save()
   } 
 
   let entity = new TicketsPurchase(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.LuckyRedEnvelope_id = event.params.id
+  
   entity.sender = event.params.sender
   entity.receiveAddress = event.params.receiveAddress
   entity.ticketNumbers = event.params.ticketNumbers
@@ -237,7 +235,7 @@ export function handleTicketsPurchase(event: TicketsPurchaseEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.id))
+  let id = event.params.id.toString()
  
   entity.redEnvelope = id
   entity.userInfo = event.params.receiveAddress
