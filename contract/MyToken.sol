@@ -17,7 +17,7 @@
             _mint(to, amount);
         }
 
-        function decimals() public view virtual returns (uint8) {
+        function decimals() public view override virtual returns (uint8) {
             return 6;
         }
     }
