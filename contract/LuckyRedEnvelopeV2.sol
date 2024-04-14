@@ -4,16 +4,20 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./interfaces/IRedEnvelope.sol";
 
-contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
+contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
     using SafeERC20 for IERC20;
-    mapping(address => bool) public operatorAddressList;
 
+    address public defaultTicketToken;
+    
     uint256 public currentId;
-
+    uint256 public defaultTicketPirce;
+    
     bool public defaultAutoClaim;
 
+    mapping(address => bool) public operatorAddressList;
 
     enum Status {
         Pending,
@@ -42,7 +46,7 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
     }
 
     struct Ticket{
-        uint256 ticketNumbers;
+        uint256 totalNumbers;
         address receiveAddress;
         bool buy;
     }
@@ -59,7 +63,11 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
     mapping(uint256 => mapping(uint256 => address)) private _injectAddrIndex;
     mapping(uint256 => mapping(address => uint256)) private _injectTicketMap;
 
-
+    modifier notContract() {
+        require(!_isContract(msg.sender), "Contract not allowed");
+        require(msg.sender == tx.origin, "Proxy contract not allowed");
+        _;
+    }
 
     modifier onlyOperator() {
         require(operatorAddressList[msg.sender] == true, "Not operator");
@@ -67,6 +75,8 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
     }
     event OperatorAddress(address operatorAddress,bool opt);
     event DefaultAutoClaimChange(bool defaultAutoClaim);
+    event DefaultTokenChange(address defaultTicketToken,uint256 defaultTicketPirce);
+
 
     event RedEnvelopeCreated(
         uint256 indexed id,
@@ -126,9 +136,14 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
         bool autoClaim
     );
 
-    constructor(address _operatorAddress)Ownable(address(msg.sender)){
+    constructor(address _operatorAddress,address _defaultTicketToken,uint256 _defaultTicketPirce)Ownable(address(msg.sender)){
         operatorAddressList[_operatorAddress] = true;
         defaultAutoClaim = true;
+        defaultTicketToken = _defaultTicketToken;
+        defaultTicketPirce = _defaultTicketPirce;
+        emit OperatorAddress(_operatorAddress,true);
+        emit DefaultAutoClaimChange(defaultAutoClaim);
+        emit DefaultTokenChange(defaultTicketToken,defaultTicketPirce);
     }
 
     function setOperatorAddress(
@@ -146,26 +161,33 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
         emit DefaultAutoClaimChange(defaultAutoClaim);
     }
 
+     function setTicketToken(address _defaultTicketToken,uint256 _defaultTicketPirce) external onlyOperator{
+        defaultTicketToken = _defaultTicketToken;
+        defaultTicketPirce = _defaultTicketPirce;
+        emit DefaultTokenChange(defaultTicketToken,defaultTicketPirce);
+    }
 
-    /**
-     * @notice create the RedEnvelope
-     * @dev Callable by operator
-     * @param _endTime: endTime of the RedEnvelope
-     * @param _maxTickets: max ticket of the RedEnvelope
-     * @param _secret: 
-     */
-    function createRedEnvelope(
-        address _tokenAddress,
+    
+    function _createRedEnvelope(address _tokenAddress,
         uint256 _ticketPirce,
         uint256 _endTime,
         uint256 _maxTickets,
         uint256 _maxPrizeNum,
         address _injectAddress,
         uint256 _injectTicketNum,
-        uint256 _secret
-    )external onlyOperator nonReentrant{
-        //TODO:require
+        uint256 _secret)internal{
         currentId++;
+        RedEnvelope storage redEnvelope = _redEnvelopes[currentId];
+        redEnvelope.ticketToken = _tokenAddress;
+        redEnvelope.status = Status.Open;
+        redEnvelope.startTime = block.timestamp;
+        redEnvelope.endTime = _endTime;
+        redEnvelope.maxTickets = _maxTickets;
+        redEnvelope.maxPrizeNum = _maxPrizeNum;
+        redEnvelope.ticketPirce = _ticketPirce;
+        redEnvelope.secret = _secret;
+        redEnvelope.autoClaim = defaultAutoClaim;
+        /*
         _redEnvelopes[currentId] = RedEnvelope({
             ticketToken: _tokenAddress,
             status: Status.Open,
@@ -182,15 +204,46 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
             ticketPirce:_ticketPirce,
             secret:_secret,
             autoClaim:defaultAutoClaim
-        });
+        });*/
         emit RedEnvelopeCreated(currentId,block.timestamp,_endTime,_maxTickets,_ticketPirce,defaultAutoClaim);
 
         if (_injectTicketNum > 0){
             // Calculate number of token to this contract
             _injectTickets(currentId,_injectAddress,_injectTicketNum);
-       }
-
+        }
     }
+
+    function createRedEnvelope(
+        uint256 _endTime,
+        uint256 _maxTickets,
+        uint256 _maxPrizeNum,
+        uint256 _secret
+    )external onlyOperator nonReentrant{
+       _createRedEnvelope(defaultTicketToken,defaultTicketPirce,_endTime,_maxTickets,
+            _maxPrizeNum,address(0),0,_secret);
+    }
+
+    /**
+     * @notice create the RedEnvelope
+     * @dev Callable by operator
+     * @param _endTime: endTime of the RedEnvelope
+     * @param _maxTickets: max ticket of the RedEnvelope
+     * @param _secret: 
+     */
+    function createRedEnvelopeDetail(
+        address _tokenAddress,
+        uint256 _ticketPirce,
+        uint256 _endTime,
+        uint256 _maxTickets,
+        uint256 _maxPrizeNum,
+        address _injectAddress,
+        uint256 _injectTicketNum,
+        uint256 _secret
+    )external onlyOperator nonReentrant{
+        _createRedEnvelope(_tokenAddress,_ticketPirce,_endTime,_maxTickets,
+            _maxPrizeNum,_injectAddress,_injectTicketNum,_secret);
+    }
+
     function injectTickets(uint256 _id,uint256 _ticketNumbers)external nonReentrant{
         require(_ticketNumbers != 0,"inject no zero");
         require(_redEnvelopes[_id].status == Status.Open, "RedEnvelope is not open");
@@ -227,9 +280,14 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
                     prize:false
                 });
             } */
+            uint256 totalNumbers = 0;
+            if (_redEnvelopes[_id].userTxNum != 0){
+                totalNumbers = _tickets[_id][_redEnvelopes[_id].userTxNum - 1].totalNumbers;
+            }
             _tickets[_id][_redEnvelopes[_id].userTxNum] = Ticket({
-                    ticketNumbers: _ticketNumbers,
+                    //ticketNumbers: _ticketNumbers,
                     receiveAddress: _receiveAddress,
+                    totalNumbers: totalNumbers + _ticketNumbers,
                     buy:_buy
                 });
 
@@ -307,6 +365,7 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
         }
     }
 
+    /*
     function _getTicket(uint256 _id,uint256 _index) internal view returns (Ticket storage){
         uint256 ticketNum = 0;
         for(uint256 i = 0;i < _redEnvelopes[_id].userTxNum;i++){
@@ -316,6 +375,27 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
             }
         }
         require(false,"index out range");
+        return _tickets[_id][0];
+    }*/
+
+    //二分查找
+    function _getTicket(uint256 _id,uint256 _index) internal view returns (Ticket storage){
+        require(_tickets[_id][_redEnvelopes[_id].userTxNum - 1].totalNumbers > _index,"index out range");
+        uint256 minNum = 0;
+        uint256 maxNum = _redEnvelopes[_id].userTxNum;
+        do{
+            uint256 tmpNum = (minNum + maxNum) / 2;
+            if (tmpNum == minNum){
+                return _tickets[_id][maxNum];
+            }
+            if (_tickets[_id][tmpNum].totalNumbers > _index){
+                maxNum = tmpNum;
+            }else if (_tickets[_id][tmpNum].totalNumbers < _index){
+                minNum = tmpNum;
+            }else{
+                return _tickets[_id][tmpNum + 1];
+            }
+        }while(true);
         return _tickets[_id][0];
     }
 
@@ -338,7 +418,7 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
         uint256 randomWord = _nonce;
         
         uint256 drawNum = userTickets;
-        if (drawNum > _redEnvelopes[_id].maxPrizeNum ){
+        if (drawNum > _redEnvelopes[_id].maxPrizeNum && _redEnvelopes[_id].maxPrizeNum != 0){
             drawNum = _redEnvelopes[_id].maxPrizeNum;
         }
 
@@ -437,10 +517,6 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
         emit ClaimPrize(_id,_winner,amountTokenToTransfer,_redEnvelopes[_id].autoClaim);
     }
 
-    function redEnvelopeStatus(uint256 _id) public view  returns (Status){
-        return _redEnvelopes[_id].status;
-    }
-
     function _removeEnvelope(uint256 _id)internal{
         for (uint256 i = 0; i < _redEnvelopes[_id].injectAddrNum; i++){
             delete _injectTicketMap[_id][_injectAddrIndex[_id][i]];
@@ -450,5 +526,13 @@ contract LuckyRedEnvelopeV2 is ReentrancyGuard, Ownable{
             delete _tickets[_id][i];
         }
         delete _redEnvelopes[_id];
+    }
+
+    function viewRedEnvelopeStatus(uint256 _id) public view  returns (uint){
+        return uint(_redEnvelopes[_id].status);
+    }
+
+    function  viewCurrentRedEnvelopeId() external view returns(uint256){
+        return _currentRedEnvelopeId;
     }
 }

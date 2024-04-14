@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "LuckyRedEnvelopeV2": {
+      "address": "0x69E9Deb635491Df763C228c0A6dCc69FdAF9Dae1",
+      "startBlock": 5698269
+    }
+  }
+}

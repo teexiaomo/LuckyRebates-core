@@ -1,0 +1,138 @@
+type UserInfo @entity{
+  id: Bytes!
+  ticketsPurchaseList: [TicketsPurchase!]  @derivedFrom(field: "userInfo")  
+  prizeDrawnList: [PrizeDrawn!]  @derivedFrom(field: "userInfo")  
+  claimPrizeList: [ClaimPrize!]  @derivedFrom(field: "userInfo")  
+}
+
+type  RedEnvelope @entity{
+  id: String!
+  status:   Int8
+  
+  userTickets: BigInt! # uint256
+  injectTickets: BigInt! # uint256
+
+  autoClaim: Boolean! # bool
+  maxTickets: BigInt! # uint256
+  ticketPirce: BigInt! # uint256 
+
+  startTimestamp:BigInt!
+  endTimeTimestamp:BigInt
+
+  createdEvent: RedEnvelopeCreated  @derivedFrom(field: "redEnvelope")
+  closedEvent: RedEnvelopeClosed    @derivedFrom(field: "redEnvelope")
+  claimableEvent: RedEnvelopeClaimable   @derivedFrom(field: "redEnvelope")
+ 
+
+  ticketsInjectList: [TicketsInject!]      @derivedFrom(field: "redEnvelope")  
+  ticketsPurchaseList:[TicketsPurchase!]   @derivedFrom(field: "redEnvelope")  
+  prizeDrawnList: [PrizeDrawn!]    @derivedFrom(field: "redEnvelope")  
+  claimPrizeList: [ClaimPrize!]    @derivedFrom(field: "redEnvelope")  
+
+}
+
+
+type ClaimPrize @entity(immutable: true) {
+  id: Bytes!
+  winner: Bytes! # address
+  totalAmount: BigInt! # uint256
+  autoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+  userInfo:UserInfo!
+  prizeDrawnList:[PrizeDrawn!]!  @derivedFrom(field: "claimPrize")
+}
+
+type DefaultChange @entity(immutable: true) {
+  id: Bytes!
+  defaultTicketPirce: BigInt! # uint256
+  defaultAutoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type NewOperatorAddress @entity(immutable: true) {
+  id: Bytes!
+  operatorAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PrizeDrawn @entity(immutable: true) {
+  id: Bytes!
+  winner: Bytes! # address
+  index: BigInt! # uint256
+  amount: BigInt! # uint256
+  autoClaim: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+  userInfo:UserInfo!
+  claimPrize:ClaimPrize
+  
+}
+
+type RedEnvelopeClaimable @entity(immutable: true) {
+  id: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+}
+
+type RedEnvelopeClosed @entity(immutable: true) {
+  id: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+}
+
+type RedEnvelopeCreated @entity(immutable: true) {
+  id: String!
+  setEndTime: BigInt! # uint256
+  setMaxTickets: BigInt! # uint256
+  setAutoClaim:Boolean!
+  setTicketPirce: BigInt! # uint256 
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+}
+
+type TicketsInject @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  ticketNumbers: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+  
+}
+
+type TicketsPurchase @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  receiveAddress: Bytes! # address
+  ticketNumbers: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  redEnvelope:RedEnvelope!
+  userInfo:UserInfo!
+}
