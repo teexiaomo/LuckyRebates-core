@@ -148,7 +148,7 @@ export function handleRedEnvelopeClaimable(
 
   let redEnvelope = RedEnvelope.load(id)
   if (redEnvelope != null){
-    redEnvelope.status = 3
+    redEnvelope.status = 4
     redEnvelope.save()
   }
   entity.redEnvelope = id
@@ -212,7 +212,7 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   let entity = new RedEnvelopeCreated(
     id
   )
-  
+  entity.startTime = event.block.timestamp
   entity.endTime = event.params.endTime
   entity.maxTickets = event.params.maxTickets
   entity.maxPrizeNum = event.params.maxPrizeNum

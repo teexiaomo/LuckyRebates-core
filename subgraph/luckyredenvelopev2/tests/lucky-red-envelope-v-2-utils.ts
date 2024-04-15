@@ -188,6 +188,7 @@ export function createRedEnvelopeClosedEvent(
   id: BigInt,
   endTime: BigInt,
   buyTickets: BigInt,
+  getTickets: BigInt,
   injectTickets: BigInt
 ): RedEnvelopeClosed {
   let redEnvelopeClosedEvent = changetype<RedEnvelopeClosed>(newMockEvent())
@@ -211,6 +212,12 @@ export function createRedEnvelopeClosedEvent(
   )
   redEnvelopeClosedEvent.parameters.push(
     new ethereum.EventParam(
+      "getTickets",
+      ethereum.Value.fromUnsignedBigInt(getTickets)
+    )
+  )
+  redEnvelopeClosedEvent.parameters.push(
+    new ethereum.EventParam(
       "injectTickets",
       ethereum.Value.fromUnsignedBigInt(injectTickets)
     )
@@ -221,10 +228,11 @@ export function createRedEnvelopeClosedEvent(
 
 export function createRedEnvelopeCreatedEvent(
   id: BigInt,
-  startTime: BigInt,
   endTime: BigInt,
   maxTickets: BigInt,
+  maxPrizeNum: BigInt,
   ticketPirce: BigInt,
+  ticketToken: Address,
   getTicketAddr: Address,
   autoClaim: boolean
 ): RedEnvelopeCreated {
@@ -234,12 +242,6 @@ export function createRedEnvelopeCreatedEvent(
 
   redEnvelopeCreatedEvent.parameters.push(
     new ethereum.EventParam("id", ethereum.Value.fromUnsignedBigInt(id))
-  )
-  redEnvelopeCreatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "startTime",
-      ethereum.Value.fromUnsignedBigInt(startTime)
-    )
   )
   redEnvelopeCreatedEvent.parameters.push(
     new ethereum.EventParam(
@@ -255,8 +257,20 @@ export function createRedEnvelopeCreatedEvent(
   )
   redEnvelopeCreatedEvent.parameters.push(
     new ethereum.EventParam(
+      "maxPrizeNum",
+      ethereum.Value.fromUnsignedBigInt(maxPrizeNum)
+    )
+  )
+  redEnvelopeCreatedEvent.parameters.push(
+    new ethereum.EventParam(
       "ticketPirce",
       ethereum.Value.fromUnsignedBigInt(ticketPirce)
+    )
+  )
+  redEnvelopeCreatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "ticketToken",
+      ethereum.Value.fromAddress(ticketToken)
     )
   )
   redEnvelopeCreatedEvent.parameters.push(

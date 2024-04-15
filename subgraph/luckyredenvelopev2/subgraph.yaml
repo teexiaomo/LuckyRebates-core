@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0xFC07c4a602d2807115e3D4de8E346b0fa28E5C81"
       abi: LuckyRedEnvelopeV2
-      startBlock: 57024767
+      startBlock: 5702476
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
