@@ -205,8 +205,12 @@ export class RedEnvelopeClosed__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get injectTickets(): BigInt {
+  get getTickets(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+
+  get injectTickets(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -227,15 +231,15 @@ export class RedEnvelopeCreated__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get startTime(): BigInt {
+  get endTime(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get endTime(): BigInt {
+  get maxTickets(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get maxTickets(): BigInt {
+  get maxPrizeNum(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
@@ -243,12 +247,16 @@ export class RedEnvelopeCreated__Params {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get getTicketAddr(): Address {
+  get ticketToken(): Address {
     return this._event.parameters[5].value.toAddress();
   }
 
+  get getTicketAddr(): Address {
+    return this._event.parameters[6].value.toAddress();
+  }
+
   get autoClaim(): boolean {
-    return this._event.parameters[6].value.toBoolean();
+    return this._event.parameters[7].value.toBoolean();
   }
 }
 
@@ -335,6 +343,68 @@ export class TicketsPurchase__Params {
 
   get ticketNumbers(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct extends ethereum.Tuple {
+  get ticketToken(): Address {
+    return this[0].toAddress();
+  }
+
+  get status(): i32 {
+    return this[1].toI32();
+  }
+
+  get endTime(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get maxTickets(): BigInt {
+    return this[3].toBigInt();
+  }
+
+  get maxPrizeNum(): BigInt {
+    return this[4].toBigInt();
+  }
+
+  get buyTickets(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get getTickets(): BigInt {
+    return this[6].toBigInt();
+  }
+
+  get injectTickets(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get userAddrNum(): BigInt {
+    return this[8].toBigInt();
+  }
+
+  get userTxNum(): BigInt {
+    return this[9].toBigInt();
+  }
+
+  get injectAddrNum(): BigInt {
+    return this[10].toBigInt();
+  }
+
+  get ticketPirce(): BigInt {
+    return this[11].toBigInt();
+  }
+
+  get getTicketAddr(): Address {
+    return this[12].toAddress();
+  }
+
+  get secret(): BigInt {
+    return this[13].toBigInt();
+  }
+
+  get autoClaim(): boolean {
+    return this[14].toBoolean();
   }
 }
 
@@ -480,6 +550,71 @@ export class LuckyRedEnvelopeV2 extends ethereum.SmartContract {
       "viewCurrentRedEnvelopeId",
       "viewCurrentRedEnvelopeId():(uint256)",
       [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  viewRedEnvelope(
+    _id: BigInt,
+  ): LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct {
+    let result = super.call(
+      "viewRedEnvelope",
+      "viewRedEnvelope(uint256):((address,uint8,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,bool))",
+      [ethereum.Value.fromUnsignedBigInt(_id)],
+    );
+
+    return changetype<LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct>(
+      result[0].toTuple(),
+    );
+  }
+
+  try_viewRedEnvelope(
+    _id: BigInt,
+  ): ethereum.CallResult<LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct> {
+    let result = super.tryCall(
+      "viewRedEnvelope",
+      "viewRedEnvelope(uint256):((address,uint8,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,bool))",
+      [ethereum.Value.fromUnsignedBigInt(_id)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct>(
+        value[0].toTuple(),
+      ),
+    );
+  }
+
+  viewRedEnvelopeClaimPrize(_id: BigInt, _user: Address): BigInt {
+    let result = super.call(
+      "viewRedEnvelopeClaimPrize",
+      "viewRedEnvelopeClaimPrize(uint256,address):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_id),
+        ethereum.Value.fromAddress(_user),
+      ],
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_viewRedEnvelopeClaimPrize(
+    _id: BigInt,
+    _user: Address,
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "viewRedEnvelopeClaimPrize",
+      "viewRedEnvelopeClaimPrize(uint256,address):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_id),
+        ethereum.Value.fromAddress(_user),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -711,6 +846,10 @@ export class CreateRedEnvelopeDetailCall__Inputs {
 
   get _secret(): BigInt {
     return this._call.inputValues[8].value.toBigInt();
+  }
+
+  get _autoClaim(): boolean {
+    return this._call.inputValues[9].value.toBoolean();
   }
 }
 

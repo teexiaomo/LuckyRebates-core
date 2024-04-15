@@ -1,0 +1,10 @@
+sepolia:
+
+token address:
+0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
+
+LuckyRedEnvelopeV1 address:
+0xdF8167f047A8eD3D9F876F7FF869cb86452c8E88
+
+LuckyRedEnvelopeV2 address:
+0xFC07c4a602d2807115e3D4de8E346b0fa28E5C81

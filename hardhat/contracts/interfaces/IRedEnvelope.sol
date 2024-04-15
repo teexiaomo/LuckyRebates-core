@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 interface IRedEnvelope{
+
     /**
      * @notice create the RedEnvelope，采用默认代币地址及配置，默认为仅支持buyTickets模式
      * @dev Callable by operator
@@ -48,13 +49,5 @@ interface IRedEnvelope{
 
     //开奖后，若_autoClaim为false，需要中奖用户调用该接口手动领奖
     function claimPrize(uint256 _id)external;
-
-    //查询指定红包状态
-    function viewRedEnvelopeStatus(uint256 _id) external view returns(uint);
-
-    //查询当前最新红包id
-    function viewCurrentRedEnvelopeId() external view returns(uint256);
-    //function viewRedEnvelopeGet(uint256 _id,address _user)external view;
-    //function viewRedEnvelopePrize(uint256 _id,address _user)external view;
 
 }

@@ -1,0 +1,389 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"buyTickets(uint256,address,uint256)": "c5e7bb33",
+			"claimPrize(uint256)": "d7098154",
+			"createRedEnvelope(uint256,uint256,uint256,uint256)": "0e9e1262",
+			"createRedEnvelopeDetail(address,uint256,uint256,uint256,uint256,address,uint256,address,uint256,bool)": "4a42c8f6",
+			"drawPrize(uint256,uint256)": "bce3468d",
+			"endRedEnvelope(uint256)": "3834efe1",
+			"getTickets(uint256,address,uint256)": "3ddb7f19",
+			"injectTickets(uint256,uint256)": "559f24bc",
+			"viewCurrentRedEnvelopeId()": "94456fa4",
+			"viewRedEnvelope(uint256)": "8f91cd17",
+			"viewRedEnvelopeStatus(uint256)": "fe5c5976"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_receiveAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ticketNumbers",
+					"type": "uint256"
+				}
+			],
+			"name": "buyTickets",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				}
+			],
+			"name": "claimPrize",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_endTime",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_maxTickets",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_maxPrizeNum",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_secret",
+					"type": "uint256"
+				}
+			],
+			"name": "createRedEnvelope",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_tokenAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ticketPirce",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_endTime",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_maxTickets",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_maxPrizeNum",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_injectAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_injectTicketNum",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_getTicketAddr",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_secret",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "_autoClaim",
+					"type": "bool"
+				}
+			],
+			"name": "createRedEnvelopeDetail",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_nonce",
+					"type": "uint256"
+				}
+			],
+			"name": "drawPrize",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				}
+			],
+			"name": "endRedEnvelope",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_receiveAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ticketNumbers",
+					"type": "uint256"
+				}
+			],
+			"name": "getTickets",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ticketNumbers",
+					"type": "uint256"
+				}
+			],
+			"name": "injectTickets",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "viewCurrentRedEnvelopeId",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				}
+			],
+			"name": "viewRedEnvelope",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "ticketToken",
+							"type": "address"
+						},
+						{
+							"internalType": "enum IRedEnvelope.Status",
+							"name": "status",
+							"type": "uint8"
+						},
+						{
+							"internalType": "uint256",
+							"name": "endTime",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "maxTickets",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "maxPrizeNum",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "buyTickets",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "getTickets",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "injectTickets",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "userAddrNum",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "userTxNum",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "injectAddrNum",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "ticketPirce",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "getTicketAddr",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "secret",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bool",
+							"name": "autoClaim",
+							"type": "bool"
+						}
+					],
+					"internalType": "struct IRedEnvelope.RedEnvelope",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_id",
+					"type": "uint256"
+				}
+			],
+			"name": "viewRedEnvelopeStatus",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+	]
+}

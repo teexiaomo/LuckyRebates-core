@@ -8,9 +8,9 @@ dataSources:
     name: LuckyRedEnvelopeV2
     network: sepolia
     source:
-      address: "0x69E9Deb635491Df763C228c0A6dCc69FdAF9Dae1"
+      address: "0xFC07c4a602d2807115e3D4de8E346b0fa28E5C81"
       abi: LuckyRedEnvelopeV2
-      startBlock: 5698269
+      startBlock: 57024767
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -46,9 +46,9 @@ dataSources:
           handler: handlePrizeDrawn
         - event: RedEnvelopeClaimable(indexed uint256,uint256)
           handler: handleRedEnvelopeClaimable
-        - event: RedEnvelopeClosed(indexed uint256,uint256,uint256,uint256)
+        - event: RedEnvelopeClosed(indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleRedEnvelopeClosed
-        - event: RedEnvelopeCreated(indexed uint256,uint256,uint256,uint256,uint256,address,bool)
+        - event: RedEnvelopeCreated(indexed uint256,uint256,uint256,uint256,uint256,address,address,bool)
           handler: handleRedEnvelopeCreated
         - event: TicketsGet(indexed uint256,indexed address,indexed address,uint256)
           handler: handleTicketsGet
