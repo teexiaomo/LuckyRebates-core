@@ -179,7 +179,8 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         address _injectAddress,
         uint256 _injectTicketNum,
         address _getTicketAddr,
-        uint256 _secret
+        uint256 _secret,
+        bool _autoClaim
         )internal{
         currentId++;
         RedEnvelope storage redEnvelope = _redEnvelopes[currentId];
@@ -191,7 +192,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         redEnvelope.maxPrizeNum = _maxPrizeNum;
         redEnvelope.ticketPirce = _ticketPirce;
         redEnvelope.secret = _secret;
-        redEnvelope.autoClaim = defaultAutoClaim;
+        redEnvelope.autoClaim = _autoClaim;
         redEnvelope.getTicketAddr = _getTicketAddr;
         
         emit RedEnvelopeCreated(currentId,block.timestamp,_endTime,_maxTickets,_ticketPirce,_getTicketAddr,defaultAutoClaim);
@@ -209,7 +210,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         uint256 _secret
     )external onlyOperator nonReentrant{
        _createRedEnvelope(defaultTicketToken,defaultTicketPirce,_endTime,_maxTickets,
-            _maxPrizeNum,address(0),0,address(0),_secret);
+            _maxPrizeNum,address(0),0,address(0),_secret,defaultAutoClaim);
     }
 
     /**
@@ -228,10 +229,11 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         address _injectAddress,
         uint256 _injectTicketNum,
         address _getTicketAddr,
-        uint256 _secret
+        uint256 _secret,
+        bool _autoClaim
     )external onlyOperator nonReentrant{
         _createRedEnvelope(_tokenAddress,_ticketPirce,_endTime,_maxTickets,
-            _maxPrizeNum,_injectAddress,_injectTicketNum,_getTicketAddr,_secret);
+            _maxPrizeNum,_injectAddress,_injectTicketNum,_getTicketAddr,_secret,_autoClaim);
     }
 
     function injectTickets(uint256 _id,uint256 _ticketNumbers)external nonReentrant{
