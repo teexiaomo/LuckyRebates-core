@@ -269,6 +269,19 @@ export class RedEnvelope extends Entity {
     this.set("maxPrizeNum", Value.fromBigInt(value));
   }
 
+  get endTime(): BigInt {
+    let value = this.get("endTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set endTime(value: BigInt) {
+    this.set("endTime", Value.fromBigInt(value));
+  }
+
   get startTimestamp(): BigInt {
     let value = this.get("startTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
@@ -282,8 +295,8 @@ export class RedEnvelope extends Entity {
     this.set("startTimestamp", Value.fromBigInt(value));
   }
 
-  get endTimeTimestamp(): BigInt | null {
-    let value = this.get("endTimeTimestamp");
+  get endTimestamp(): BigInt | null {
+    let value = this.get("endTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -291,11 +304,11 @@ export class RedEnvelope extends Entity {
     }
   }
 
-  set endTimeTimestamp(value: BigInt | null) {
+  set endTimestamp(value: BigInt | null) {
     if (!value) {
-      this.unset("endTimeTimestamp");
+      this.unset("endTimestamp");
     } else {
-      this.set("endTimeTimestamp", Value.fromBigInt(<BigInt>value));
+      this.set("endTimestamp", Value.fromBigInt(<BigInt>value));
     }
   }
 

@@ -6,12 +6,12 @@ import (
 )
 
 func TestGetRedEnvlopeList(t *testing.T) {
-	str := GetRedEnvlopeList(10)
+	str := GetRedEnvlopeList(10, 0, 0)
 	log.Println(str)
 }
 
 func TestGetRedEnvlope(t *testing.T) {
-	str := GetRedEnvlope("4")
+	str := GetRedEnvlope("1")
 	log.Println(str)
 }
 

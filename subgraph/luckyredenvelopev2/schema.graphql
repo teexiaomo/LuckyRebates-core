@@ -20,16 +20,17 @@ type  RedEnvelope @entity{
 
   getTicketAddr: Bytes!
   
-  buyTickets: BigInt! # uint256  购注总数
-  getTickets: BigInt! # uint256  领取总数
-  injectTickets: BigInt! # uint256  注入总数
+  buyTickets: BigInt! # uint256  当前购注总数
+  getTickets: BigInt! # uint256  当前领取总数
+  injectTickets: BigInt! # uint256  当前注入总数
 
   autoClaim: Boolean! # bool  是否自动领取
   maxTickets: BigInt! # uint256   最大奖注数限制
   maxPrizeNum:BigInt! # uint256   最大中奖数，为0表明100%中奖
+  endTime:BigInt!  # 设定结束时间
 
-  startTimestamp:BigInt!  #开始时间
-  endTimeTimestamp:BigInt #结束时间
+  startTimestamp:BigInt!  #实际开始时间
+  endTimestamp:BigInt #实际结束时间
 
   createdEvent: RedEnvelopeCreated  @derivedFrom(field: "redEnvelope")  #创建事件记录
   closedEvent: RedEnvelopeClosed    @derivedFrom(field: "redEnvelope")  #停止事件记录

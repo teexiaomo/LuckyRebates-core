@@ -169,7 +169,7 @@ export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
   let redEnvelope = RedEnvelope.load(id)
   if (redEnvelope != null){
     redEnvelope.status = 2
-    redEnvelope.endTimeTimestamp = event.params.endTime
+    redEnvelope.endTimestamp = event.params.endTime
     redEnvelope.buyTickets = event.params.buyTickets
     redEnvelope.getTickets = event.params.getTickets
     redEnvelope.injectTickets = event.params.injectTickets
@@ -195,9 +195,11 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   redEnvelope.startTimestamp = event.block.timestamp
   redEnvelope.maxTickets = event.params.maxTickets
   redEnvelope.maxPrizeNum = event.params.maxPrizeNum
+  redEnvelope.endTime = event.params.endTime
 
   redEnvelope.ticketToken = event.params.ticketToken
   redEnvelope.ticketPirce = event.params.ticketPirce
+  
   redEnvelope.autoClaim = event.params.autoClaim
   
   
