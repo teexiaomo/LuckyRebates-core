@@ -47,68 +47,6 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
     event DefaultAutoClaimChange(bool defaultAutoClaim);
     event DefaultTokenChange(address defaultTicketToken,uint256 defaultTicketPirce);
 
-
-    event RedEnvelopeCreated(
-        uint256 indexed id,
-        uint256 endTime,
-        uint256 maxTickets,
-        uint256 maxPrizeNum,
-        uint256 ticketPirce,
-        address ticketToken,
-        address sendAllowAddr,
-        bool autoClaim
-    );
-
-    event RedEnvelopeClosed(
-        uint256 indexed id,
-        uint256 endTime,
-        uint256 buyTickets,
-        uint256 sendTickets,
-        uint256 injectTickets
-    );
-
-    event RedEnvelopeClaimable(
-        uint256 indexed id,
-        uint256 endTime
-    );
-
-
-    event TicketsPurchase(
-        uint256 indexed id,
-        address indexed sender,
-        address indexed receiveAddress,
-        uint256 ticketNumbers
-    );
-
-    event TicketsGet(
-        uint256 indexed id,
-        address indexed sender,
-        address indexed receiveAddress,
-        uint256 ticketNumbers
-    );
-
-    event TicketsInject(
-        uint256 indexed id,
-        address indexed sender,
-        uint256 ticketNumbers
-    );
-
-
-    event PrizeDrawn(
-        uint256 indexed id,
-        address indexed winner,
-        uint256 indexed index,
-        uint256 amount,
-        bool autoClaim
-    );
-
-    event ClaimPrize(
-        uint256 indexed id,
-        address indexed winner,
-        uint256 totalAmount,
-        bool autoClaim
-    );
-
     constructor(address _operatorAddress,address _defaultTicketToken,uint256 _defaultTicketPirce)Ownable(address(msg.sender)){
         operatorAddressList[_operatorAddress] = true;
         defaultAutoClaim = true;
