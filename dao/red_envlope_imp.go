@@ -39,10 +39,10 @@ func GetRedEnvlopeList(first int, model int, status int) string {
             status
             model
 
-            getTicketAddr
+            sendAllowAddr
 
             buyTickets
-            getTickets
+            sendTickets
             injectTickets
 
             autoClaim
@@ -93,10 +93,10 @@ func GetRedEnvlope(id string) string {
             status
             model
 
-            getTicketAddr
+            sendAllowAddr
 
             buyTickets
-            getTickets
+            sendTickets
             injectTickets
 
             autoClaim

@@ -15,13 +15,13 @@ type  RedEnvelope @entity{
   ticketPirce: BigInt! # uint256 
 
   status:   Int8! #1:open 2:Close 3:Feed 4:Claimable
-  model:   Int8! #1:buyTicket model 2:getTicket model
+  model:   Int8! #1:buyTicket model 2:sendTicket model
 
 
-  getTicketAddr: Bytes!
+  sendAllowAddr: Bytes!
   
   buyTickets: BigInt! # uint256  当前购注总数
-  getTickets: BigInt! # uint256  当前领取总数
+  sendTickets: BigInt! # uint256  当前领取总数
   injectTickets: BigInt! # uint256  当前注入总数
 
   autoClaim: Boolean! # bool  是否自动领取
@@ -132,7 +132,7 @@ type RedEnvelopeCreated @entity(immutable: true) {
   maxPrizeNum: BigInt! # uint256
   autoClaim:Boolean!
   ticketPirce: BigInt! # uint256 
-  getTicketAddr:Bytes! # address
+  sendAllowAddr:Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

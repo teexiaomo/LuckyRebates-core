@@ -178,8 +178,8 @@ export class RedEnvelope extends Entity {
     this.set("model", Value.fromI64(value));
   }
 
-  get getTicketAddr(): Bytes {
-    let value = this.get("getTicketAddr");
+  get sendAllowAddr(): Bytes {
+    let value = this.get("sendAllowAddr");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -187,8 +187,8 @@ export class RedEnvelope extends Entity {
     }
   }
 
-  set getTicketAddr(value: Bytes) {
-    this.set("getTicketAddr", Value.fromBytes(value));
+  set sendAllowAddr(value: Bytes) {
+    this.set("sendAllowAddr", Value.fromBytes(value));
   }
 
   get buyTickets(): BigInt {
@@ -204,8 +204,8 @@ export class RedEnvelope extends Entity {
     this.set("buyTickets", Value.fromBigInt(value));
   }
 
-  get getTickets(): BigInt {
-    let value = this.get("getTickets");
+  get sendTickets(): BigInt {
+    let value = this.get("sendTickets");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -213,8 +213,8 @@ export class RedEnvelope extends Entity {
     }
   }
 
-  set getTickets(value: BigInt) {
-    this.set("getTickets", Value.fromBigInt(value));
+  set sendTickets(value: BigInt) {
+    this.set("sendTickets", Value.fromBigInt(value));
   }
 
   get injectTickets(): BigInt {
@@ -1450,8 +1450,8 @@ export class RedEnvelopeCreated extends Entity {
     this.set("ticketPirce", Value.fromBigInt(value));
   }
 
-  get getTicketAddr(): Bytes {
-    let value = this.get("getTicketAddr");
+  get sendAllowAddr(): Bytes {
+    let value = this.get("sendAllowAddr");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1459,8 +1459,8 @@ export class RedEnvelopeCreated extends Entity {
     }
   }
 
-  set getTicketAddr(value: Bytes) {
-    this.set("getTicketAddr", Value.fromBytes(value));
+  set sendAllowAddr(value: Bytes) {
+    this.set("sendAllowAddr", Value.fromBytes(value));
   }
 
   get blockNumber(): BigInt {

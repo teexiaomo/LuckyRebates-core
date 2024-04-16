@@ -205,7 +205,7 @@ export class RedEnvelopeClosed__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get getTickets(): BigInt {
+  get sendTickets(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
@@ -251,7 +251,7 @@ export class RedEnvelopeCreated__Params {
     return this._event.parameters[5].value.toAddress();
   }
 
-  get getTicketAddr(): Address {
+  get sendAllowAddr(): Address {
     return this._event.parameters[6].value.toAddress();
   }
 
@@ -371,7 +371,7 @@ export class LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct extends ether
     return this[5].toBigInt();
   }
 
-  get getTickets(): BigInt {
+  get sendTickets(): BigInt {
     return this[6].toBigInt();
   }
 
@@ -395,7 +395,7 @@ export class LuckyRedEnvelopeV2__viewRedEnvelopeResultValue0Struct extends ether
     return this[11].toBigInt();
   }
 
-  get getTicketAddr(): Address {
+  get sendAllowAddr(): Address {
     return this[12].toAddress();
   }
 
@@ -840,7 +840,7 @@ export class CreateRedEnvelopeDetailCall__Inputs {
     return this._call.inputValues[6].value.toBigInt();
   }
 
-  get _getTicketAddr(): Address {
+  get _sendAllowAddr(): Address {
     return this._call.inputValues[7].value.toAddress();
   }
 
@@ -925,44 +925,6 @@ export class EndRedEnvelopeCall__Outputs {
   }
 }
 
-export class GetTicketsCall extends ethereum.Call {
-  get inputs(): GetTicketsCall__Inputs {
-    return new GetTicketsCall__Inputs(this);
-  }
-
-  get outputs(): GetTicketsCall__Outputs {
-    return new GetTicketsCall__Outputs(this);
-  }
-}
-
-export class GetTicketsCall__Inputs {
-  _call: GetTicketsCall;
-
-  constructor(call: GetTicketsCall) {
-    this._call = call;
-  }
-
-  get _id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _receiveAddress(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _ticketNumbers(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class GetTicketsCall__Outputs {
-  _call: GetTicketsCall;
-
-  constructor(call: GetTicketsCall) {
-    this._call = call;
-  }
-}
-
 export class InjectTicketsCall extends ethereum.Call {
   get inputs(): InjectTicketsCall__Inputs {
     return new InjectTicketsCall__Inputs(this);
@@ -1019,6 +981,44 @@ export class RenounceOwnershipCall__Outputs {
   _call: RenounceOwnershipCall;
 
   constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class SendTicketsCall extends ethereum.Call {
+  get inputs(): SendTicketsCall__Inputs {
+    return new SendTicketsCall__Inputs(this);
+  }
+
+  get outputs(): SendTicketsCall__Outputs {
+    return new SendTicketsCall__Outputs(this);
+  }
+}
+
+export class SendTicketsCall__Inputs {
+  _call: SendTicketsCall;
+
+  constructor(call: SendTicketsCall) {
+    this._call = call;
+  }
+
+  get _id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _receiveAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _ticketNumbers(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class SendTicketsCall__Outputs {
+  _call: SendTicketsCall;
+
+  constructor(call: SendTicketsCall) {
     this._call = call;
   }
 }

@@ -171,7 +171,7 @@ export function handleRedEnvelopeClosed(event: RedEnvelopeClosedEvent): void {
     redEnvelope.status = 2
     redEnvelope.endTimestamp = event.params.endTime
     redEnvelope.buyTickets = event.params.buyTickets
-    redEnvelope.getTickets = event.params.getTickets
+    redEnvelope.sendTickets = event.params.sendTickets
     redEnvelope.injectTickets = event.params.injectTickets
 
     redEnvelope.save()
@@ -189,8 +189,8 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   )
   redEnvelope.status = 1
   redEnvelope.buyTickets = new BigInt(0)
-  redEnvelope.getTickets = new BigInt(0)
-  redEnvelope.getTicketAddr = event.params.getTicketAddr
+  redEnvelope.sendTickets = new BigInt(0)
+  redEnvelope.sendAllowAddr = event.params.sendAllowAddr
   redEnvelope.injectTickets = new BigInt(0)
   redEnvelope.startTimestamp = event.block.timestamp
   redEnvelope.maxTickets = event.params.maxTickets
@@ -203,7 +203,7 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   redEnvelope.autoClaim = event.params.autoClaim
   
   
-  if (event.params.getTicketAddr ==  Address.zero()){
+  if (event.params.sendAllowAddr ==  Address.zero()){
     redEnvelope.model = 1
   }else{
     redEnvelope.model = 2
@@ -218,7 +218,7 @@ export function handleRedEnvelopeCreated(event: RedEnvelopeCreatedEvent): void {
   entity.endTime = event.params.endTime
   entity.maxTickets = event.params.maxTickets
   entity.maxPrizeNum = event.params.maxPrizeNum
-  entity.getTicketAddr = event.params.getTicketAddr
+  entity.sendAllowAddr = event.params.sendAllowAddr
   entity.ticketPirce = event.params.ticketPirce
   entity.autoClaim = event.params.autoClaim
 
@@ -258,7 +258,7 @@ export function handleTicketsGet(event: TicketsGetEvent): void {
 
   let redEnvelope = RedEnvelope.load(id)
   if (redEnvelope != null){
-    redEnvelope.getTickets = redEnvelope.getTickets.plus(event.params.ticketNumbers)
+    redEnvelope.sendTickets = redEnvelope.sendTickets.plus(event.params.ticketNumbers)
     redEnvelope.save()
   }
 
