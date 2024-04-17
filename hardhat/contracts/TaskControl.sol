@@ -16,6 +16,8 @@
 
         mapping(address => uint256) private _tasks;     //记录任务及权重
 
+        event TaskAdd(address taskAddr,uint256 weight);
+
         constructor(address _redEnvelopeAddr,bool _allowBuyTicket,bool _allowSendTicket)
             ERC20("lotteryTicket", "Ticket")
             Ownable(address(msg.sender))
@@ -27,12 +29,13 @@
         }
 
         function decimals() public view override virtual returns (uint8) {
-            return 0;
+            return 6;
         }
 
         //设置任务及权重
         function setTask(address _taskAddr,uint256 _weight)external onlyOwner{
             _tasks[_taskAddr] = _weight;
+            emit TaskAdd(_taskAddr, _weight);
         }
 
 
@@ -41,9 +44,11 @@
 
             uint256 amount = Itask(_taskAddr).runTask(address(msg.sender),_value,_data) * _tasks[_taskAddr];
             _mint(_receiveAddress, amount);
+            emit TokenMint(address(msg.sender),_taskAddr,_receiveAddress,amount);
         }
 
-        function _getTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)internal{
+        function _getTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)internal returns(bool){
+            bool buy = true;
             RedEnvelope memory redEnvelope = IRedEnvelope(redEnvelopeAddr).viewRedEnvelope(_id);
             if (redEnvelope.sendAllowAddr == address(0)){      
                 require(allowBuyTicket == true, "buy ticket no allow");
@@ -53,16 +58,24 @@
             }else{
                 require(allowSendTicket == true, "send ticket no allow");                
                 IRedEnvelope(redEnvelopeAddr).sendTickets(_id,_receiveAddress,_ticketNumbers);
+                buy = false;
             }
+            return buy;
         }
 
         function getTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)external{
-            burn(_ticketNumbers);
-            _getTicket(_id,_receiveAddress,_ticketNumbers);
+            uint256 amount = _ticketNumbers * 10 ** decimals();
+            burn(amount);
+            bool buy = _getTicket(_id,_receiveAddress,_ticketNumbers);
+
+            emit TicketGet(_id,address(msg.sender),_receiveAddress,amount,_ticketNumbers,buy);
         }
         function getTicketFrom(uint256 _id,address _fromAddress,address _receiveAddress,uint256 _ticketNumbers)external{
-            burnFrom(_fromAddress,_ticketNumbers);
-            _getTicket(_id,_receiveAddress,_ticketNumbers);
+            uint256 amount = _ticketNumbers * 10 ** decimals();
+            burnFrom(_fromAddress,amount);
+            bool buy = _getTicket(_id,_receiveAddress,_ticketNumbers);
+
+            emit TicketGet(_id,_fromAddress,_receiveAddress,amount,_ticketNumbers,buy);
         }
 
         //提取第三方代币
