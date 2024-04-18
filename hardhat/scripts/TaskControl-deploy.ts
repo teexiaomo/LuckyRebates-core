@@ -5,7 +5,7 @@ import {
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
   export async function deployTaskControl() {
-    const { luckyRedEnvelope } = await loadFixture(deployRedEnvelope);
+    const  luckyRedEnvelope  = await loadFixture(deployRedEnvelope);
     //const { myToken } = await deployMyToken();
     const redEnvelopeAddr = await luckyRedEnvelope.getAddress();
 
@@ -15,7 +15,7 @@ import {
     const taskControl = await TaskControl.deploy(redEnvelopeAddr,true,true);
     await taskControl.waitForDeployment();
 
-    const address = await taskControl.getAddress();
-    console.log('TaskControl address:',address);
-    return { taskControl, owner, otherAccount };
+    //const address = await taskControl.getAddress();
+    //console.log('TaskControl address:',address);
+    return taskControl;
 }

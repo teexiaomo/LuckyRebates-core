@@ -5,6 +5,7 @@ pragma solidity ^0.8.20;
 import "../interfaces/ITask.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+//若taskControl注册该合约，_whileListAddr中记录的地址都可以领取task token
 contract WhileListTask is Itask,Ownable{
     mapping(address => bool) _whileListAddr;
     constructor(address[] memory _operatorAddressList)

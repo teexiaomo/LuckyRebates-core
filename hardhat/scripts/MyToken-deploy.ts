@@ -13,13 +13,15 @@ export async function deployMyToken() {
 
   const MyToken = await hre.ethers.getContractFactory("TetherUSD");
   const myToken = await MyToken.deploy(owner);
-  const address = await myToken.getAddress();
-  await myToken.waitForDeployment();
-            
-  console.log('myToken address:',address);
   
-  return { myToken, owner, otherAccount };
+  await myToken.waitForDeployment();
+  //const address = await myToken.getAddress();          
+  //console.log('myToken address:',address);
+  
+  return myToken;
 }
+
+/*
 export async function getBalanceOf(owner:AddressLike) {
   const { myToken } = await loadFixture(deployMyToken);
   await expect(myToken).not.to.be.reverted;

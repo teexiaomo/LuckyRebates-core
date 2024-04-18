@@ -4,25 +4,24 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-  export async function deployWhileListTask() {
-    const [owner, otherAccount] = await hre.ethers.getSigners();
+  export async function deployEmptyTask() {
 
-    const WhileListTask = await hre.ethers.getContractFactory("WhileListTask");
-    const whileListTask = await WhileListTask.deploy([owner]);
-    await whileListTask.waitForDeployment();
+    const EmptyTask = await hre.ethers.getContractFactory("EmptyTask");
+    const emptyTask = await EmptyTask.deploy();
+    await emptyTask.waitForDeployment();
 
 
     //const address = await whileListTask.getAddress();
     //console.log('whileListTask address:',address);
 
-    return  whileListTask;
+    return  emptyTask;
 }
 export async function bindTaskControl(){
-    const  whileListTask  = await loadFixture(deployWhileListTask);
+    const  emptyTask  = await loadFixture(deployEmptyTask);
     const  taskControl  = await loadFixture(deployTaskControl);
     
-    const whileListTaskAddress = await whileListTask.getAddress();
-    const rs = await taskControl.setTask(whileListTaskAddress,1);
+    const emptyTaskAddress = await emptyTask.getAddress();
+    const rs = await taskControl.setTask(emptyTaskAddress,1);
     rs.wait();
     //const tx = await rs.getTransaction();
     //console.log('bindTaskControl tx:',tx?.hash);

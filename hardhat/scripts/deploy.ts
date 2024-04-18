@@ -8,11 +8,26 @@ import {
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 async function deply(){
-    await loadFixture(deployMyToken);
-    await loadFixture(deployRedEnvelope);
-    await loadFixture(deployTaskControl);
-    await loadFixture(deployWhileListTask);
-    await loadFixture(bindTaskControl);
+  const myToken = await loadFixture(deployMyToken);
+  const myTokenAddr = await myToken.getAddress();          
+  console.log('myToken address:',myTokenAddr);
+
+
+  const luckyRedEnvelope =  await loadFixture(deployRedEnvelope);
+  const luckyAddr = await luckyRedEnvelope.getAddress();
+  console.log('luckyRedEnvelope address:',luckyAddr);
+
+  const taskControl = await loadFixture(deployTaskControl);
+  const taskControlAddr = await taskControl.getAddress();
+  console.log('TaskControl address:',taskControlAddr);
+
+  const whileListTask = await loadFixture(deployWhileListTask);
+  const whileListTaskAddr = await whileListTask.getAddress();
+  console.log('whileListTask address:',whileListTaskAddr);
+
+  const rs = await loadFixture(bindTaskControl);
+  const tx = await rs.getTransaction();
+  console.log('bindTaskControl tx:',tx?.hash);
 }
 
 

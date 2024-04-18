@@ -5,11 +5,12 @@
     import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
     import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
     import "@openzeppelin/contracts/access/Ownable.sol";
+    import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
     import "./interfaces/IRedEnvelope.sol";
     import "./interfaces/ITaskControl.sol";
     import "./interfaces/ITask.sol";
 
-    contract TaskControl is ITaskControl,ERC20, ERC20Burnable, Ownable {
+    contract TaskControl is ITaskControl,ERC20,ReentrancyGuard, ERC20Burnable, Ownable {
         address public redEnvelopeAddr;
         bool public allowBuyTicket;
         bool public allowSendTicket;
@@ -32,16 +33,17 @@
             return 6;
         }
 
-        //设置任务及权重
+        //设置任务及权重，若权重为0，则等同删除任务
         function setTask(address _taskAddr,uint256 _weight)external onlyOwner{
             _tasks[_taskAddr] = _weight;
             emit TaskAdd(_taskAddr, _weight);
         }
 
 
-        function mintToken(address _taskAddr,address _receiveAddress,uint256 _value,bytes calldata _data) external {
+        function mintToken(address _taskAddr,address _receiveAddress,uint256 _value,bytes calldata _data) external nonReentrant{
             require(_tasks[_taskAddr] != 0,"no set as task");
 
+            //实际铸造token数为runTask返回值*权重
             uint256 amount = Itask(_taskAddr).runTask(address(msg.sender),_value,_data) * _tasks[_taskAddr];
             _mint(_receiveAddress, amount);
             emit TokenMint(address(msg.sender),_taskAddr,_receiveAddress,amount);
