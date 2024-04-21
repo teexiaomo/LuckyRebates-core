@@ -1,6 +1,6 @@
     // SPDX-License-Identifier: MIT
     // Compatible with OpenZeppelin Contracts ^5.0.0
-    pragma solidity ^0.8.20;
+    pragma solidity ^0.8.19;
 
     interface ITaskControl  {
         event TokenMint(address sender,address taskAddr,address receiveAddress,uint256 amount);

@@ -1598,6 +1598,32 @@ export class TicketsGet extends Entity {
     this.set("ticketNumbers", Value.fromBigInt(value));
   }
 
+  get fromIndex(): BigInt {
+    let value = this.get("fromIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set fromIndex(value: BigInt) {
+    this.set("fromIndex", Value.fromBigInt(value));
+  }
+
+  get toIndex(): BigInt {
+    let value = this.get("toIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set toIndex(value: BigInt) {
+    this.set("toIndex", Value.fromBigInt(value));
+  }
+
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1866,6 +1892,32 @@ export class TicketsPurchase extends Entity {
 
   set ticketNumbers(value: BigInt) {
     this.set("ticketNumbers", Value.fromBigInt(value));
+  }
+
+  get fromIndex(): BigInt {
+    let value = this.get("fromIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set fromIndex(value: BigInt) {
+    this.set("fromIndex", Value.fromBigInt(value));
+  }
+
+  get toIndex(): BigInt {
+    let value = this.get("toIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set toIndex(value: BigInt) {
+    this.set("toIndex", Value.fromBigInt(value));
   }
 
   get blockNumber(): BigInt {

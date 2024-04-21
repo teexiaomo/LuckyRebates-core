@@ -244,6 +244,8 @@ export function handleTicketsGet(event: TicketsGetEvent): void {
   entity.sender = event.params.sender
   entity.receiveAddress = event.params.receiveAddress
   entity.ticketNumbers = event.params.ticketNumbers
+  entity.fromIndex = event.params.ticketIndex
+  entity.toIndex = event.params.ticketIndex.plus(event.params.ticketNumbers).minus(new BigInt(1))
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -303,6 +305,8 @@ export function handleTicketsPurchase(event: TicketsPurchaseEvent): void {
   entity.sender = event.params.sender
   entity.receiveAddress = event.params.receiveAddress
   entity.ticketNumbers = event.params.ticketNumbers
+  entity.fromIndex = event.params.ticketIndex
+  entity.toIndex = event.params.ticketIndex.plus(event.params.ticketNumbers).minus(new BigInt(1))
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

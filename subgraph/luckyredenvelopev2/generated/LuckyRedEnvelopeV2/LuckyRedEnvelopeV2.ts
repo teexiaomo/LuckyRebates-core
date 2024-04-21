@@ -285,8 +285,12 @@ export class TicketsGet__Params {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get ticketNumbers(): BigInt {
+  get ticketIndex(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+
+  get ticketNumbers(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -341,8 +345,12 @@ export class TicketsPurchase__Params {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get ticketNumbers(): BigInt {
+  get ticketIndex(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+
+  get ticketNumbers(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 

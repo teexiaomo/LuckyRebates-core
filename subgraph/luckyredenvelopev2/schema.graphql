@@ -96,7 +96,7 @@ type OwnershipTransferred @entity(immutable: true) {
 type PrizeDrawn @entity(immutable: true) {
   id: Bytes!
   winner: Bytes! # address
-  index: BigInt! # uint256
+  index: BigInt! # uint256 中奖标号
   amount: BigInt! # uint256
   autoClaim: Boolean! # bool
   blockNumber: BigInt!
@@ -145,6 +145,8 @@ type TicketsGet @entity(immutable: true) {
   sender: Bytes! # address
   receiveAddress: Bytes! # address
   ticketNumbers: BigInt! # uint256
+  fromIndex:BigInt! #奖注起始标号
+  toIndex:BigInt! #奖注结束标号
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -168,6 +170,8 @@ type TicketsPurchase @entity(immutable: true) {
   sender: Bytes! # address
   receiveAddress: Bytes! # address
   ticketNumbers: BigInt! # uint256
+  fromIndex:BigInt! #奖注起始标号
+  toIndex:BigInt! #奖注结束标号
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

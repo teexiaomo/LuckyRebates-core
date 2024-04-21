@@ -50,10 +50,10 @@ dataSources:
           handler: handleRedEnvelopeClosed
         - event: RedEnvelopeCreated(indexed uint256,uint256,uint256,uint256,uint256,address,address,bool)
           handler: handleRedEnvelopeCreated
-        - event: TicketsGet(indexed uint256,indexed address,indexed address,uint256)
+        - event: TicketsGet(indexed uint256,indexed address,indexed address,uint256,uint256)
           handler: handleTicketsGet
         - event: TicketsInject(indexed uint256,indexed address,uint256)
           handler: handleTicketsInject
-        - event: TicketsPurchase(indexed uint256,indexed address,indexed address,uint256)
+        - event: TicketsPurchase(indexed uint256,indexed address,indexed address,uint256,uint256)
           handler: handleTicketsPurchase
       file: ./src/lucky-red-envelope-v-2.ts

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 
 
@@ -37,7 +37,7 @@ interface IRedEnvelope{
  event RedEnvelopeCreated(
         uint256 indexed id,
         uint256 endTime,
-        uint256 maxTickets,
+        uint256 maxTickets, 
         uint256 maxPrizeNum,
         uint256 ticketPirce,
         address ticketToken,
@@ -58,11 +58,14 @@ interface IRedEnvelope{
         uint256 endTime
     );
 
-
+    //ticketIndex表明购注的起始编号
+    //若ticketIndex为23，ticketNumbers为1，则奖注的编号为23
+    //若ticketIndex为0，ticketNumbers为10，则奖注的编号为0-9
     event TicketsPurchase(
         uint256 indexed id,
         address indexed sender,
         address indexed receiveAddress,
+        uint256 ticketIndex,    
         uint256 ticketNumbers
     );
 
@@ -70,6 +73,7 @@ interface IRedEnvelope{
         uint256 indexed id,
         address indexed sender,
         address indexed receiveAddress,
+        uint256 ticketIndex,
         uint256 ticketNumbers
     );
 

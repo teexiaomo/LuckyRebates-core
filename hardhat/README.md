@@ -57,9 +57,9 @@ yarn hardhat test ./test/taskControl-send.ts
 ```
 
 ## 添加task
-1. 实现Itask接口的task合约
+1. 实现ItaskCallee接口的task合约
 ```
-function runTask(address sender,uint256 value,bytes calldata data) external  returns(uint256);
+function taskCall(address sender,uint256 value,bytes calldata data) external  returns(uint256);
 ```
 
 2. 将实现并部署的task合约绑定到TaskControl合约,设置权重

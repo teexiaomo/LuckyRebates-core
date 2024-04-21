@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -166,7 +166,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         emit TicketsInject(currentId,address(_injectAddress),_ticketNumbers);
     }
 
-    function _fillTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers,bool _buy)internal{
+    function _fillTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers,bool _buy)internal returns(uint256){
            /*
            uint256 curUserTicketNum = _redEnvelopes[_id].buyTickets + _redEnvelopes[_id].getTickets;
             
@@ -177,14 +177,14 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
                     prize:false
                 });
             } */
-            uint256 totalNumbers = 0;
+            uint256 lastTotalNumbers = 0;
             if (_redEnvelopes[_id].userTxNum != 0){
-                totalNumbers = _tickets[_id][_redEnvelopes[_id].userTxNum - 1].totalNumbers;
+                lastTotalNumbers = _tickets[_id][_redEnvelopes[_id].userTxNum - 1].totalNumbers;
             }
             _tickets[_id][_redEnvelopes[_id].userTxNum] = Ticket({
                     //ticketNumbers: _ticketNumbers,
                     receiveAddress: _receiveAddress,
-                    totalNumbers: totalNumbers + _ticketNumbers,
+                    totalNumbers: lastTotalNumbers + _ticketNumbers,
                     buy:_buy
                 });
 
@@ -200,6 +200,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
             }
             _redEnvelopes[_id].userTxNum += 1;
             _userAddrTicketNum[_id][_receiveAddress] = _userAddrTicketNum[_id][_receiveAddress] + _ticketNumbers;
+            return lastTotalNumbers;
     }
 
     function sendTickets(
@@ -217,9 +218,9 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         if (_redEnvelopes[_id].maxTickets != 0){
             require(_redEnvelopes[_id].buyTickets + _redEnvelopes[_id].sendTickets +  _ticketNumbers <= _redEnvelopes[_id].maxTickets, "RedEnvelope is over ticket");
         }
-        _fillTicket(_id,_receiveAddress,_ticketNumbers,false);
+        uint256 lastTotalNumbers = _fillTicket(_id,_receiveAddress,_ticketNumbers,false);
         
-        emit TicketsGet(_id,address(msg.sender),_receiveAddress,_ticketNumbers);
+        emit TicketsGet(_id,address(msg.sender),_receiveAddress,lastTotalNumbers,_ticketNumbers);
     }
 
     function buyTickets(
@@ -243,9 +244,9 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         // Transfer cake tokens to this contract
         IERC20(_redEnvelopes[_id].ticketToken).safeTransferFrom(address(msg.sender), address(this), amountTokenToTransfer);
 
-        _fillTicket(_id,_receiveAddress,_ticketNumbers,true);
+        uint256 lastTotalNumbers = _fillTicket(_id,_receiveAddress,_ticketNumbers,true);
 
-        emit TicketsPurchase(_id,address(msg.sender),_receiveAddress,_ticketNumbers);
+        emit TicketsPurchase(_id,address(msg.sender),_receiveAddress,lastTotalNumbers,_ticketNumbers);
     }
 
 

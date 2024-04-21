@@ -358,6 +358,12 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
+				"name": "ticketIndex",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
 				"name": "ticketNumbers",
 				"type": "uint256"
 			}
@@ -410,6 +416,12 @@
 				"internalType": "address",
 				"name": "receiveAddress",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "ticketIndex",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
