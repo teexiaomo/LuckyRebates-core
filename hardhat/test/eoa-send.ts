@@ -2,20 +2,20 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import hre from "hardhat";
-import {deployMyToken} from "../scripts/MyToken-deploy"
+import {deployMyToken,TetherUSD} from "../scripts/MyToken-deploy"
 
-import { deployRedEnvelope } from "../scripts/LuckyRedEnvelopeV2-deploy";
+import { deployRedEnvelope,LuckyRedEnvelopeV2 } from "../scripts/LuckyRedEnvelopeV2-deploy";
 import { expect } from "chai";
 import  {
     ZeroAddress
   } from "ethers";
-
+import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
 describe("RedEnvelope:send model", function (){
-    let myToken;
-    let luckyRedEnvelope;
-    let owner;
-    let otherAccount;
+    let myToken:TetherUSD;
+    let luckyRedEnvelope:LuckyRedEnvelopeV2;
+    let owner:HardhatEthersSigner;
+    let otherAccount:HardhatEthersSigner;
     before(async function(){
         //初始化合约
         myToken = await loadFixture(deployMyToken);
@@ -30,7 +30,7 @@ describe("RedEnvelope:send model", function (){
     });
 
     describe("start redEnvelope",function(){
-        let id;
+        let id:bigint;
         before(async function(){
             //授权用户地址向红包合约转账
             const addr = await luckyRedEnvelope.getAddress();
@@ -62,7 +62,7 @@ describe("RedEnvelope:send model", function (){
             
             const balance1 = await myToken.balanceOf(owner);
             const balance2 = await myToken.balanceOf(otherAccount);
-            console.log('id:%d inject tx:%s balance1:%d balance2:%d',id,recept.hash,balance1,balance2);
+            console.log('id:%d inject tx:%s balance1:%d balance2:%d',id,recept?.hash,balance1,balance2);
         });
         it("buy",async function () {
             //尝试购注，send模式不允许购注
@@ -89,7 +89,7 @@ describe("RedEnvelope:send model", function (){
 
             const balance1 = await myToken.balanceOf(owner);
             const balance2 = await myToken.balanceOf(otherAccount);
-            console.log('id:%d send tx:%s balance1:%d balance2:%d',id,recept.hash,balance1,balance2);
+            console.log('id:%d send tx:%s balance1:%d balance2:%d',id,recept?.hash,balance1,balance2);
         });
     });
     
@@ -105,7 +105,7 @@ describe("RedEnvelope:send model", function (){
 
             const balance1 = await myToken.balanceOf(owner);
             const balance2 = await myToken.balanceOf(otherAccount);
-            console.log('id:%d end tx:%s balance1:%d balance2:%d',id,recept.hash,balance1,balance2);
+            console.log('id:%d end tx:%s balance1:%d balance2:%d',id,recept?.hash,balance1,balance2);
         });
     });
     describe("drawPrize redEnvelope",function(){
@@ -118,7 +118,7 @@ describe("RedEnvelope:send model", function (){
    
             const balance1 = await myToken.balanceOf(owner);
             const balance2 = await myToken.balanceOf(otherAccount);
-            console.log('id:%d drawPrize tx:%s balance1:%d balance2:%d',id,recept.hash,balance1,balance2);
+            console.log('id:%d drawPrize tx:%s balance1:%d balance2:%d',id,recept?.hash,balance1,balance2);
         });
     });
 });

@@ -2,20 +2,22 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import hre from "hardhat";
-import {deployMyToken} from "../scripts/MyToken-deploy"
+import {deployMyToken,TetherUSD} from "../scripts/MyToken-deploy"
 
-import { deployRedEnvelope } from "../scripts/LuckyRedEnvelopeV2-deploy";
-import { deployTaskControl } from "../scripts/TaskControl-deploy";
-import { deployEmptyTask } from "../scripts/EmptyTask-deploy";
+import { deployRedEnvelope,LuckyRedEnvelopeV2 } from "../scripts/LuckyRedEnvelopeV2-deploy";
+import { deployTaskControl,DefaultTaskControl } from "../scripts/TaskControl-deploy";
+import { deployEmptyTask,EmptyTask } from "../scripts/EmptyTask-deploy";
 import { expect } from "chai";
+
+import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
 
 describe("task control", function (){
-    let myToken;
-    let luckyRedEnvelope;
-    let taskControl;
-    let owner;
-    let otherAccount;
+    let myToken:TetherUSD;
+    let luckyRedEnvelope:LuckyRedEnvelopeV2;
+    let taskControl:DefaultTaskControl;
+    let owner:HardhatEthersSigner;
+    let otherAccount:HardhatEthersSigner;
     before(async function(){
         //初始化合约
         myToken = await loadFixture(deployMyToken);
@@ -32,7 +34,7 @@ describe("task control", function (){
         
     });
     describe("do task",function(){
-        let emptyTask;
+        let emptyTask:EmptyTask;
         before(async function(){
             //部署具体领取任务：emptyTask：任意地址执行即可以免费领取投注
             emptyTask = await loadFixture(deployEmptyTask);
@@ -49,17 +51,19 @@ describe("task control", function (){
         it("get task token", async function () {
             //完成emptyTask任务领取10个投注token
             const emptyTaskAddr = await emptyTask.getAddress();
-            const mintToken = taskControl.mintToken(emptyTaskAddr,otherAccount,10n,'0x');
+            ////将合约参数通过abi.encode处理后传入
+            const data = hre.ethers.AbiCoder.defaultAbiCoder().encode(["uint256"],[10n]);
+            const mintToken = taskControl.mintToken(emptyTaskAddr,otherAccount,data);
             await expect(mintToken).not.to.be.reverted;
             const recept = await (await mintToken).wait();
             
             const balance = await taskControl.balanceOf(otherAccount);
-            console.log('get token tx:%s otherAccount token balance:%d',recept.hash,balance);
+            console.log('get token tx:%s otherAccount token balance:%d',recept?.hash,balance);
         });
 
     });
     describe("redEnvelope",function(){
-        let id;
+        let id:bigint;
         before(async function(){
             //授权用户地址向红包合约转账
             const luckyRedEnvelopeAddr = await luckyRedEnvelope.getAddress();
@@ -92,7 +96,7 @@ describe("task control", function (){
             const recept = await (await injectTickets).wait();
             
             const balance = await myToken.balanceOf(owner);
-            console.log('id:%d inject tx:%s balance:%d',id,recept.hash,balance);
+            console.log('id:%d inject tx:%s balance:%d',id,recept?.hash,balance);
         });
         it("owner getTicket",async function () {
             //owner通过taskControl代买5注
@@ -139,7 +143,7 @@ describe("task control", function (){
 
             const balance = await myToken.balanceOf(otherAccount)
             
-            console.log('id:%d end tx:%s otherAccount balance:%d',id,recept.hash,balance);
+            console.log('id:%d end tx:%s otherAccount balance:%d',id,recept?.hash,balance);
         });
     });
     describe("drawPrize redEnvelope",function(){
@@ -153,7 +157,7 @@ describe("task control", function (){
             //owner捐赠10注 + taskControl购买5注，otherAccount最终获得15注的中奖
             const balance = await myToken.balanceOf(otherAccount)
             
-            console.log('id:%d drawPrize tx:%s otherAccount balance:%d',id,recept.hash,balance);
+            console.log('id:%d drawPrize tx:%s otherAccount balance:%d',id,recept?.hash,balance);
         });
     });
 });

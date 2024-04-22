@@ -8,9 +8,9 @@ dataSources:
     name: LuckyRedEnvelopeV2
     network: sepolia
     source:
-      address: "0x7B63eB4e1d14EFFc51380727366070A080d51B28"
+      address: "0xE601515E7a2B7f7a964adbb4176ca54B08F9E03D"
       abi: LuckyRedEnvelopeV2
-      startBlock: 5708175
+      startBlock: 5750413
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

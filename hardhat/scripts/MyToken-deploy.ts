@@ -5,6 +5,9 @@ import {
 import {
   loadFixture,
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+export type {
+  TetherUSD,
+} from "../typechain-types/contracts/MyToken.sol";
 
 import { expect } from "chai";
 

@@ -4,6 +4,10 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
+export type {
+    EmptyTask,
+    } from "../typechain-types/contracts/task/EmptyTask";
+
   export async function deployEmptyTask() {
 
     const EmptyTask = await hre.ethers.getContractFactory("EmptyTask");

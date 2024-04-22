@@ -33,8 +33,12 @@ contract PayTask is ItaskCallee,Ownable{
         operatorAddress = _operatorAddress;
     }
     
-    function taskCall(address _sender,uint256 _value,bytes calldata _data) external  onlyOperator returns(uint256){
+    function _taskCall(address _sender,uint256 _value) internal returns(uint256){
         IERC20(payToken).safeTransferFrom(_sender, targetAddress, _value);
         return _value;
+    }
+    function taskCall(address _sender,bytes calldata _data) external  onlyOperator returns(uint256){
+        (uint256 value) = abi.decode(_data,(uint256));
+        return _taskCall(_sender,value);
     }
 }

@@ -24,8 +24,9 @@ contract WhileListTask is ItaskCallee,Ownable{
         _whileListAddr[_whileAddress] = _opt;
     }
     
-    function taskCall(address _sender,uint256 _value,bytes calldata _data) external view returns(uint256){
+    function taskCall(address _sender,bytes calldata _data) external view returns(uint256){
         require(_whileListAddr[_sender] == true,"no allow address");
-        return _value;
+        (uint256 value) = abi.decode(_data,(uint256));
+        return value;
     }
 }

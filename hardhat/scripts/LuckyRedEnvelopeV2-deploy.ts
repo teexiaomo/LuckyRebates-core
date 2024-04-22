@@ -7,6 +7,9 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
+export type {
+  LuckyRedEnvelopeV2
+} from "../typechain-types/contracts";
 
 export async function deployRedEnvelope() {
     const  myToken  = await loadFixture(deployMyToken);

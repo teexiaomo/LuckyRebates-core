@@ -27,11 +27,13 @@
             redEnvelopeAddr = _redEnvelopeAddr;
             allowBuyTicket = _allowBuyTicket;
             allowSendTicket = _allowSendTicket;
+            
         }
 
+        /*
         function decimals() public view override virtual returns (uint8) {
             return 6;
-        }
+        }*/
 
         //设置任务及权重，若权重为0，则等同删除任务
         function setTask(address _taskAddr,uint256 _weight)external onlyOwner{
@@ -40,11 +42,11 @@
         }
 
 
-        function mintToken(address _taskAddr,address _receiveAddress,uint256 _value,bytes calldata _data) external nonReentrant{
+        function mintToken(address _taskAddr,address _receiveAddress,bytes calldata _data) external nonReentrant{
             require(_tasks[_taskAddr] != 0,"no set as task");
 
             //实际铸造token数为runTask返回值*权重
-            uint256 amount = ItaskCallee(_taskAddr).taskCall(address(msg.sender),_value,_data) * _tasks[_taskAddr];
+            uint256 amount = ItaskCallee(_taskAddr).taskCall(address(msg.sender),_data) * _tasks[_taskAddr];
             _mint(_receiveAddress, amount);
             emit TokenMint(address(msg.sender),_taskAddr,_receiveAddress,amount);
         }

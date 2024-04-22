@@ -2,16 +2,16 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import hre from "hardhat";
-import {deployMyToken} from "../scripts/MyToken-deploy"
-
-import { deployRedEnvelope } from "../scripts/LuckyRedEnvelopeV2-deploy";
+import {deployMyToken,TetherUSD} from "../scripts/MyToken-deploy"
+import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+import { deployRedEnvelope,LuckyRedEnvelopeV2 } from "../scripts/LuckyRedEnvelopeV2-deploy";
 import { expect } from "chai";
 
 
 describe("RedEnvelope:buy model", function (){
-    let myToken;
-    let luckyRedEnvelope;
-    let owner;
+    let myToken:TetherUSD;
+    let luckyRedEnvelope:LuckyRedEnvelopeV2;
+    let owner:HardhatEthersSigner;
     before(async function(){
         //初始化合约
         myToken = await loadFixture(deployMyToken);
@@ -27,7 +27,7 @@ describe("RedEnvelope:buy model", function (){
     });
 
     describe("start redEnvelope",function(){
-        let id;
+        let id:bigint;
         before(async function(){
             //授权用户地址向红包合约转账
             const addr = await luckyRedEnvelope.getAddress();
@@ -54,7 +54,7 @@ describe("RedEnvelope:buy model", function (){
             const recept = await (await injectTickets).wait();
             
             const balance = await myToken.balanceOf(owner);
-            console.log('id:%d inject tx:%s balance:%d',id,recept.hash,balance);
+            console.log('id:%d inject tx:%s balance:%d',id,recept?.hash,balance);
         });
         it("buy",async function () {
             //购买20注
@@ -64,7 +64,7 @@ describe("RedEnvelope:buy model", function (){
             const recept = await (await buyTickets).wait();
 
             const balance = await myToken.balanceOf(owner);
-            console.log('id:%d buy tx:%s  balance:%d',id,recept.hash,balance);
+            console.log('id:%d buy tx:%s  balance:%d',id,recept?.hash,balance);
         });
 
         it("send",async function () {
@@ -86,7 +86,7 @@ describe("RedEnvelope:buy model", function (){
 
             const balance = await myToken.balanceOf(owner)
             
-            console.log('id:%d end tx:%s balance:%d',id,recept.hash,balance);
+            console.log('id:%d end tx:%s balance:%d',id,recept?.hash,balance);
         });
     });
     describe("drawPrize redEnvelope",function(){
@@ -99,7 +99,7 @@ describe("RedEnvelope:buy model", function (){
    
             const balance = await myToken.balanceOf(owner)
             
-            console.log('id:%d drawPrize tx:%s balance:%d',id,recept.hash,balance);
+            console.log('id:%d drawPrize tx:%s balance:%d',id,recept?.hash,balance);
         });
     });
 });

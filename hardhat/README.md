@@ -59,7 +59,7 @@ yarn hardhat test ./test/taskControl-send.ts
 ## 添加task
 1. 实现ItaskCallee接口的task合约
 ```
-function taskCall(address sender,uint256 value,bytes calldata data) external  returns(uint256);
+function taskCall(address sender,bytes calldata data) external  returns(uint256);
 ```
 
 2. 将实现并部署的task合约绑定到TaskControl合约,设置权重
@@ -69,7 +69,7 @@ function setTask(address _taskAddr,uint256 _weight)external;
 
 3. 通过TaskControl合约执行task任务，获取token
 ```
-function mintToken(address _taskAddr,address _receiveAddress,uint256 _value,bytes calldata _data) external;
+function mintToken(address _taskAddr,address _receiveAddress,bytes calldata _data) external;
 ```
 
 4. 消耗token，参与指定红包，领取奖注
@@ -77,6 +77,7 @@ function mintToken(address _taskAddr,address _receiveAddress,uint256 _value,byte
 function getTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)external;
 ```
 
-其中buy模式红包需要TaskControl合约拥有足够购买投注的资产
-send模式红包需要TaskControl合约被绑定为sendAllowAddr
+**其中buy模式红包需要TaskControl合约拥有足够购买投注的资产*
+
+**send模式红包需要TaskControl合约被绑定为sendAllowAddr*
 
