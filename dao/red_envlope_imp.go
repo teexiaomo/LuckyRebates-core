@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"strings"
 
 	"github.com/machinebox/graphql"
 )
@@ -20,18 +21,16 @@ func init() {
 //model:0.全查；1.仅查buy model模式的；2.仅查get model模式的
 //status:0.全查；1.open 2.Close 3.Feed 4.Claimable
 func GetRedEnvlopeList(first int, model int, status int) string {
-	whereList := ""
+	whereList := []string{}
 	if model != 0 {
-		whereList = "model:$modelkey"
+		whereList = append(whereList, "model:$modelkey")
 	}
 	if status != 0 {
-		if whereList != "" {
-			whereList += ","
-		}
-		whereList = whereList + "status:$statuskey"
+		whereList = append(whereList, "status:$statuskey")
 	}
+	whereStr := strings.Join(whereList, ",")
 	query := string(`query ($firstkey: Int!,$modelkey: Int!,$statuskey: Int!) { 
-        redEnvelopes (first:$firstkey,orderBy:id,orderDirection :desc,where:{` + whereList + `}){
+        redEnvelopes (first:$firstkey,orderBy:id,orderDirection :desc,where:{` + whereStr + `}){
             id
             ticketToken
             ticketPirce
@@ -80,7 +79,7 @@ func GetRedEnvlopeList(first int, model int, status int) string {
 	return string(data)
 }
 
-// 查询某一条的详情
+// 查询某一条红包的详情
 func GetRedEnvlope(id string) string {
 	// make a request
 	req := graphql.NewRequest(`
@@ -175,6 +174,8 @@ func GetRedEnvlope(id string) string {
 	return string(data)
 }
 
+// 查询用户的参与历史
+// ticketsPurchaseList为该用户的buy记录，TicketsGetList为get记录，prizeDrawnList为中奖记录，claimPrizeList为领奖记录
 func GetUserInfo(addr string) string {
 	req := graphql.NewRequest(`
     query ($key: String!) {
@@ -218,6 +219,65 @@ func GetUserInfo(addr string) string {
 
 	// set any variables
 	req.Var("key", addr)
+
+	// set header fields
+	req.Header.Set("Cache-Control", "no-cache")
+
+	// define a Context for the request
+	ctx := context.Background()
+
+	// run it and capture the response
+	var respData interface{}
+	if err := client.Run(ctx, req, &respData); err != nil {
+		log.Fatal(err)
+	}
+	data, err := json.Marshal(respData)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(data)
+}
+
+func GetUserInfoWithRedEnvlopeId(addr string, id string) string {
+	req := graphql.NewRequest(`
+    query ($addr: String!,$id: String!) {
+        userInfo (id:$addr) {
+            id
+            ticketsPurchaseList(orderBy:blockTimestamp,orderDirection :asc,where:{redEnvelope:$id}){
+                sender
+                receiveAddress
+                ticketNumbers
+                fromIndex
+                toIndex
+                transactionHash
+                blockTimestamp
+            }
+            TicketsGetList(orderBy:blockTimestamp,orderDirection :asc,where:{redEnvelope:$id}){
+                sender
+                receiveAddress
+                ticketNumbers
+                fromIndex
+                toIndex
+                transactionHash
+                blockTimestamp
+            }
+            prizeDrawnList(orderBy:index,orderDirection :asc,where:{redEnvelope:$id}){
+                amount
+                index
+                transactionHash
+            }
+            claimPrizeList(where:{redEnvelope:"1"}){
+                totalAmount
+                autoClaim
+                transactionHash
+            }
+        }
+    }
+`)
+
+	// set any variables
+	req.Var("addr", addr)
+	req.Var("id", id)
 
 	// set header fields
 	req.Header.Set("Cache-Control", "no-cache")
