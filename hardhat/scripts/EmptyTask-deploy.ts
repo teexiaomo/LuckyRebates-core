@@ -1,5 +1,5 @@
 import hre from "hardhat";
-import {deployTaskControl} from "./TaskControl-deploy"
+import {deployTaskControlWithToken} from "./TaskControlWithToken-deploy"
 import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
@@ -20,9 +20,9 @@ export type {
 
     return  emptyTask;
 }
-export async function bindTaskControl(){
+export async function bindTaskControlWithToken(){
     const  emptyTask  = await loadFixture(deployEmptyTask);
-    const  taskControl  = await loadFixture(deployTaskControl);
+    const  taskControl  = await loadFixture(deployTaskControlWithToken);
     
     const emptyTaskAddress = await emptyTask.getAddress();
     const rs = await taskControl.setTask(emptyTaskAddress,1);

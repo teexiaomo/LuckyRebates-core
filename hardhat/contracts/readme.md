@@ -2,7 +2,7 @@
 浏览器:https://sepolia.etherscan.io/
 
 ## 合约地址
-### token address:
+### token（U） address:
 0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
 
 ### LuckyRedEnvelopeV1 address:
@@ -12,36 +12,51 @@
 0xE601515E7a2B7f7a964adbb4176ca54B08F9E03D
 已绑定操作员地址
 
-### DefaultTaskControl address:
+### TaskControlDirect address:
+0xDC3A3f30fCE9b3Ba86363f6858910d48B8f3a37D
+已转账100U
+已绑定EmptyTask，权重为1
+已绑定PayTask，权重为1
+
+### DefaultTaskControlWithToken address:
 0xA2A0aC18F965E03443efdd2dfeA3990c07b076E8
+已转账500U
+已设置price为1000000
+0x10e474732c98960AF2e612A720c966d8203ed43a
+
 
 ### EmptyTask address:
 0x10e474732c98960AF2e612A720c966d8203ed43a
-已绑定DefaultTaskControl，权重为1
 
 ## PayTask address:
 0x5e8cAB19578CAa8E5Bc4d65cb2843d5CCB99Ce20
-支持支付代币:0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
-已绑定DefaultTaskControl，权重为1
+支持支付代币（U）:0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
+
 
 
 ## 操作员地址
 *LuckyRedEnvelopeV2:*
 0xEF48A41d7882B31E680483C9c6E17F0Cb125CF38
 
-
-*DefaultTaskControl:*
+*TaskControlDirect:*
 0x874Ba02eC75e3A6FfDDE59FB79E993D4e42053Ac
 
+*DefaultTaskControlWithToken:*
+0x874Ba02eC75e3A6FfDDE59FB79E993D4e42053Ac
+
+
 ## 使用指南
-### 创建及处理红包
+### 任务积分模式
+#### 创建及处理红包
 通过红包合约操作员地址直接调用LuckyRedEnvelopeV2合约接口
 
-### 用户获取奖注token
-用户（前端）直接调用DefaultTaskControl合约的mintToken接口,可根据用户参与的任务选择传入具体的task合约地址
+#### 用户获取奖注token
+用户（前端）直接调用DefaultTaskControlWithToken合约的mintToken接口,可根据用户参与的任务选择传入具体的task合约地址
 
-### 用户注销奖注token参与红包
-用户（前端）直接调用DefaultTaskControl合约的getTicket接口,将会消耗1*10^decimals个token换取1注具体红包活动
+#### 用户注销奖注token参与红包
+用户（前端）直接调用DefaultTaskControlWithToken合约的getTicket接口,将会消耗1*10^decimals个token换取1注具体红包活动
+
+### 直接投注模式
 
 ## 其他
 ### 如何给mintToken接口的data字段传参数

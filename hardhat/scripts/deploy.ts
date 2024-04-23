@@ -1,6 +1,6 @@
 import hre from "hardhat";
 import {deployMyToken} from "./MyToken-deploy"
-import {deployTaskControl} from "./TaskControl-deploy"
+import {deployTaskControlWithToken} from "./TaskControlWithToken-deploy"
 import { deployRedEnvelope } from "./LuckyRedEnvelopeV2-deploy";
 import { deployWhileListTask,bindTaskControl } from "./WhileListTask-deploy";
 import {
@@ -17,7 +17,7 @@ async function deply(){
   const luckyAddr = await luckyRedEnvelope.getAddress();
   console.log('luckyRedEnvelope address:',luckyAddr);
 
-  const taskControl = await loadFixture(deployTaskControl);
+  const taskControl = await loadFixture(deployTaskControlWithToken);
   const taskControlAddr = await taskControl.getAddress();
   console.log('TaskControl address:',taskControlAddr);
 

@@ -5,17 +5,21 @@ import hre from "hardhat";
 import {deployMyToken,TetherUSD} from "../scripts/MyToken-deploy"
 
 import { deployRedEnvelope,LuckyRedEnvelopeV2 } from "../scripts/LuckyRedEnvelopeV2-deploy";
-import { deployTaskControl,DefaultTaskControl } from "../scripts/TaskControl-deploy";
+import { deployTaskControlWithToken,DefaultTaskControlWithToken } from "../scripts/TaskControlWithToken-deploy";
 import { deployEmptyTask,EmptyTask } from "../scripts/EmptyTask-deploy";
-import { expect } from "chai";
 
 import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+import { expect } from "chai";
+import  {
+    ZeroAddress
+  } from "ethers";
 
 
-describe("task control", function (){
+
+describe("task control with token: sends ticket", function (){
     let myToken:TetherUSD;
     let luckyRedEnvelope:LuckyRedEnvelopeV2;
-    let taskControl:DefaultTaskControl;
+    let taskControl:DefaultTaskControlWithToken;
     let owner:HardhatEthersSigner;
     let otherAccount:HardhatEthersSigner;
     before(async function(){
@@ -30,7 +34,7 @@ describe("task control", function (){
 
         [owner,otherAccount] = await hre.ethers.getSigners();
 
-        taskControl = await loadFixture(deployTaskControl)
+        taskControl = await loadFixture(deployTaskControlWithToken)
         
     });
     describe("do task",function(){
@@ -51,7 +55,7 @@ describe("task control", function (){
         it("get task token", async function () {
             //完成emptyTask任务领取10个投注token
             const emptyTaskAddr = await emptyTask.getAddress();
-            ////将合约参数通过abi.encode处理后传入
+            //将合约参数通过abi.encode处理后传入
             const data = hre.ethers.AbiCoder.defaultAbiCoder().encode(["uint256"],[10n]);
             const mintToken = taskControl.mintToken(emptyTaskAddr,otherAccount,data);
             await expect(mintToken).not.to.be.reverted;
@@ -71,18 +75,14 @@ describe("task control", function (){
             await expect(approveCall).not.to.be.reverted;
             await (await approveCall).wait() ;
 
-            //给taskControl打点U
+
+            //创建send模式红包，且绑定send地址为taskControl
             const taskControlAddr = await taskControl.getAddress();
-            const transferCall = myToken.transfer(taskControlAddr,1000000000);
-            await expect(transferCall).not.to.be.reverted;
-
-            await (await transferCall).wait();
-
-            //创建buy模式红包
-            const createRedEnvelopeCall = luckyRedEnvelope.createRedEnvelope(0n,0n,20n,0n);
-            await expect(createRedEnvelopeCall).not.to.be.reverted;
+            const myTokenAddr = await myToken.getAddress();
+            const createRedEnvelopeDetail = luckyRedEnvelope.createRedEnvelopeDetail(myTokenAddr,1000000n,0n,0n,20n,ZeroAddress,0n,taskControlAddr,0n,true);
+            await expect(createRedEnvelopeDetail).not.to.be.reverted;
             
-            await (await createRedEnvelopeCall).wait();
+            await (await createRedEnvelopeDetail).wait();
 
             id = await luckyRedEnvelope.viewCurrentRedEnvelopeId();
             const balance = await myToken.balanceOf(owner);
@@ -99,7 +99,7 @@ describe("task control", function (){
             console.log('id:%d inject tx:%s balance:%d',id,recept?.hash,balance);
         });
         it("owner getTicket",async function () {
-            //owner通过taskControl代买5注
+            //owner通过taskControl领取5注
             let balance = await taskControl.balanceOf(owner);
             console.log('owner token before balance:%d',balance);
 
@@ -114,12 +114,12 @@ describe("task control", function (){
         });
 
         it("otherAccount getTicket",async function () {
-            //otherAccount通过taskControl代买5注
+            //otherAccount通过taskControl领取5注
             let balance = await taskControl.balanceOf(otherAccount);
             console.log('otherAccount token before balance:%d',balance);
             
             //otherAccount 尝试消耗5token领取5投注
-            //由于为buy模式，因此taskControl将会向luckyRedEnvelope购买5投注，并赠送给otherAccount
+            //由于为send模式，因此taskControl将会向luckyRedEnvelope调用sendTickets向otherAccount赠送5注
             const getTicket =  taskControl.connect(otherAccount).getTicket(id,otherAccount,5n);
             
             await expect(getTicket).not.to.be.reverted;
@@ -154,7 +154,7 @@ describe("task control", function (){
             await expect(drawPrize).not.to.be.reverted;
             const recept = await (await drawPrize).wait();   
             
-            //owner捐赠10注 + taskControl购买5注，otherAccount最终获得15注的中奖
+            //由于为send模式，最终参与抽奖的只是owner捐赠的10注 ，otherAccount最终获得10注的中奖
             const balance = await myToken.balanceOf(otherAccount)
             
             console.log('id:%d drawPrize tx:%s otherAccount balance:%d',id,recept?.hash,balance);

@@ -3,7 +3,7 @@
 
 Try running some of the following tasks:
 
-## 介绍
+## 红包介绍
 ### 中奖设置：
  + 通过创建红包时的PrizeNum调节中奖奖注数
  + 中奖投注奖金额随机，总数等于抽奖总额度（无抽成下）
@@ -13,17 +13,41 @@ Try running some of the following tasks:
  + 若无人参与投注，所有参与捐赠的奖注将会退回
   
 ### buy模式红包：
- + 通过createRedEnvelope或者createRedEnvelopeDetail创建
  + 抽奖总额度 = 捐赠额度 + 投注额度
  + 参与抽奖奖注数 = 投注奖注数
+ + 适合无第三方捐赠额度的场景，参与者越多，奖金池累积越多
+ + 通过createRedEnvelope或者createRedEnvelopeDetail创建
 
 ### send模式红包：
- + 仅能通过createRedEnvelopeDetail创建，且必须设置sendAllowAddr地址
- + sendAllowAddr地址作为调用方可以直接获得奖注，由sendAllowAddr指定奖注的派发规则
  + 抽奖总额度 = 捐赠额度
  + 参与抽奖奖注数 = 派发奖注数
-  
+ + 适合存在第三方指定营销的场景，由第三方设置（捐赠）奖金池，并指定许可内的用户参与抽奖
+ + 仅能通过createRedEnvelopeDetail创建，且必须绑定sendAllowAddr地址
+ + 仅允许sendAllowAddr地址向第三方赠送奖注
+ + 推荐将*任务控制器*设置为sendAllowAddr地址
 
+
+  
+## 任务控制器
+ + 可作为一类特殊的sendAllowAddr地址，绑定具体红包，用于规定该红包的派发规则
+ + 可绑定多类型任务，并为这类任务设置相应的权重
+ + 用户可以选择完成任务控制器绑定的任务，并获取红包的抽奖资格
+ + 存在两类任务控制模式
+  
+### 直接投注模式
+ + 用户参与任务，完成时通过任务管理器自动投注指定红包活动
+ + 参考TaskControlDirect.sol实现
+
+### 任务积分模式  
+ + 用户参与任务，完成时获得积分
+ + 用户可选择消耗积分，通过任务管理器参与指定红包活动
+ + 参考DefaultTaskControlWithToken.sol实现
+  
+## 任务
+  + 可支持各种链上活动，需绑定到任务控制器
+  + 用户完成任务后，理论上即可获得红包的领取资格
+  + 已默认实现链上转账任务/链上质押任务/链上打卡任务/空任务
+  + 可支持自定义链上任务
 
 ## 编译
 ```shell
@@ -46,17 +70,27 @@ yarn hardhat test ./test/eoa-buy.ts
 yarn hardhat test ./test/eoa-send.ts
 ```
 
-通过TaskControl测试buy模式
+通过任务控制器（任务积分模式）测试buy模式
 ```shell
-yarn hardhat test ./test/taskControl-buy.ts
+yarn hardhat test ./test/taskControlWithToken-buy.ts
 ```
 
-通过TaskControl测试send模式
+通过任务控制器（任务积分模式）测试send模式
 ```shell
-yarn hardhat test ./test/taskControl-send.ts
+yarn hardhat test ./test/taskControlWithToken-send.ts
 ```
 
-## 添加task
+通过任务控制器（直接投注模式）测试buy模式
+```shell
+yarn hardhat test ./test/taskControlDirect-buy.ts
+```
+
+通过任务控制器（直接投注模式）测试send模式
+```shell
+yarn hardhat test ./test/taskControlDirect-send.ts
+```
+
+## 添加task（以任务积分模式为例）
 1. 实现ItaskCallee接口的task合约
 ```
 function taskCall(address sender,bytes calldata data) external  returns(uint256);

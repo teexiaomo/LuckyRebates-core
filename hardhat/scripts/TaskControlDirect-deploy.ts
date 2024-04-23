@@ -4,18 +4,18 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 export type {
-    DefaultTaskControl
+    TaskControlDirect
 } from "../typechain-types/contracts";
 
-  export async function deployTaskControl() {
+  export async function deployTaskControlDirect() {
     const  luckyRedEnvelope  = await loadFixture(deployRedEnvelope);
     //const { myToken } = await deployMyToken();
     const redEnvelopeAddr = await luckyRedEnvelope.getAddress();
 
     const [owner, otherAccount] = await hre.ethers.getSigners();
 
-    const TaskControl = await hre.ethers.getContractFactory("DefaultTaskControl");
-    const taskControl = await TaskControl.deploy(redEnvelopeAddr,true,true);
+    const TaskControl = await hre.ethers.getContractFactory("TaskControlDirect");
+    const taskControl = await TaskControl.deploy(redEnvelopeAddr,true,true,1n);
     await taskControl.waitForDeployment();
 
     //const address = await taskControl.getAddress();

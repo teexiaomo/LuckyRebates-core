@@ -7,10 +7,10 @@
     import "@openzeppelin/contracts/access/Ownable.sol";
     import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
     import "./interfaces/IRedEnvelope.sol";
-    import "./interfaces/ITaskControl.sol";
+    import "./interfaces/ITaskControlWithToken.sol";
     import "./interfaces/ItaskCallee.sol";
 
-    contract DefaultTaskControl is ITaskControl,ERC20,ReentrancyGuard, ERC20Burnable, Ownable {
+    contract DefaultTaskControlWithToken is ITaskControlWithToken,ERC20,ReentrancyGuard, ERC20Burnable, Ownable {
         address public redEnvelopeAddr;
         bool public allowBuyTicket;
         bool public allowSendTicket;
