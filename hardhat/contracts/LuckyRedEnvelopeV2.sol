@@ -141,7 +141,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         }
     }
 
-    function injectTickets(uint256 _id,uint256 _ticketNumbers)external nonReentrant{
+    function injectTickets(uint256 _id,uint256 _ticketNumbers)external virtual override nonReentrant{
         require(_ticketNumbers != 0,"inject no zero");
         require(_redEnvelopes[_id].status == Status.Open, "RedEnvelope is not open");
         if (_redEnvelopes[_id].endTime != 0){
@@ -207,7 +207,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         uint256 _id,
         address _receiveAddress,
         uint256 _ticketNumbers
-    )external nonReentrant{
+    )external virtual override nonReentrant{
         require(_redEnvelopes[_id].status == Status.Open, "RedEnvelope is not open");
         require(_redEnvelopes[_id].sendAllowAddr != address(0), "no get ticket model");
         require(_redEnvelopes[_id].sendAllowAddr == address(msg.sender), "not allow get ticket");
@@ -227,7 +227,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
         uint256 _id,
         address _receiveAddress,
         uint256 _ticketNumbers
-    )external nonReentrant{
+    )external virtual override nonReentrant{
         require(_redEnvelopes[_id].status == Status.Open, "RedEnvelope is not open");
         require(_redEnvelopes[_id].sendAllowAddr == address(0), "no buy ticket model");
         require(_ticketNumbers != 0 ,"ticketNumbers no zero");
@@ -252,7 +252,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
 
     function endRedEnvelope(
         uint256 _id
-    )external onlyOperator nonReentrant{
+    )external virtual override onlyOperator nonReentrant{
         require(_redEnvelopes[_id].status == Status.Open, "RedEnvelope is not open");
         //require(block.timestamp > _redEnvelopes[_id].endTime || _redEnvelopes[_id].buyTickets == _redEnvelopes[_id].maxTickets, "RedEnvelope is over");
         _redEnvelopes[_id].status = Status.Close;
@@ -303,7 +303,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
     function drawPrize(
         uint256 _id,
         uint256 _nonce
-    )external onlyOperator nonReentrant{
+    )external virtual override onlyOperator nonReentrant{
         require(_redEnvelopes[_id].status == Status.Close, "RedEnvelope not close");
         _redEnvelopes[_id].status = Status.Claimable;
         emit RedEnvelopeClaimable(_id,block.timestamp);
@@ -401,7 +401,7 @@ contract LuckyRedEnvelopeV2 is IRedEnvelope,ReentrancyGuard, Ownable{
     }
 
 
-    function claimPrize(uint256 _id)external nonReentrant{
+    function claimPrize(uint256 _id)external virtual override nonReentrant{
         require(_redEnvelopes[_id].status == Status.Claimable, "RedEnvelope not claimable");
         require(_redEnvelopes[_id].autoClaim == false, "RedEnvelope auto claim");
         _claimPrize(_id,address(msg.sender));

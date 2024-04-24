@@ -7,7 +7,7 @@ import {
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 export type {
   TetherUSD,
-} from "../typechain-types/contracts/MyToken.sol";
+} from "../typechain-types";
 
 import { expect } from "chai";
 

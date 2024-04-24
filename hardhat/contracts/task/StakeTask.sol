@@ -70,7 +70,7 @@ contract PayTask is ItaskCallee,Ownable{
         _withdraw(msg.sender);
     }
     
-    function taskCall(address _sender,bytes calldata _data) external  onlyOperator returns(uint256){
+    function taskCall(address _sender,bytes calldata _data) external virtual override onlyOperator returns(uint256){
         uint256 value = _withdraw(_sender);
         return value;
     }

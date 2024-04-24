@@ -5,7 +5,7 @@ import hre from "hardhat";
 import {deployMyToken,TetherUSD} from "../scripts/MyToken-deploy"
 
 import { deployRedEnvelope,LuckyRedEnvelopeV2 } from "../scripts/LuckyRedEnvelopeV2-deploy";
-import { deployTaskControlWithToken,DefaultTaskControlWithToken } from "../scripts/TaskControlWithToken-deploy";
+import { deployTaskControlWithToken,TaskControlWithToken } from "../scripts/TaskControlWithToken-deploy";
 import { deployEmptyTask,EmptyTask } from "../scripts/EmptyTask-deploy";
 import { expect } from "chai";
 
@@ -15,7 +15,7 @@ import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signer
 describe("task control with token: buy ticket", function (){
     let myToken:TetherUSD;
     let luckyRedEnvelope:LuckyRedEnvelopeV2;
-    let taskControl:DefaultTaskControlWithToken;
+    let taskControl:TaskControlWithToken;
     let owner:HardhatEthersSigner;
     let otherAccount:HardhatEthersSigner;
     before(async function(){

@@ -9,7 +9,7 @@ import {
 import { expect } from "chai";
 export type {
   LuckyRedEnvelopeV2
-} from "../typechain-types/contracts";
+} from "../typechain-types";
 
 export async function deployRedEnvelope() {
     const  myToken  = await loadFixture(deployMyToken);

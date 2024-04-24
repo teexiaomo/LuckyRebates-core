@@ -4,8 +4,8 @@ import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 export type {
-  DefaultTaskControlWithToken
-} from "../typechain-types/contracts";
+  TaskControlWithToken
+} from "../typechain-types";
 
   export async function deployTaskControlWithToken() {
     const  luckyRedEnvelope  = await loadFixture(deployRedEnvelope);
@@ -14,7 +14,7 @@ export type {
 
     const [owner, otherAccount] = await hre.ethers.getSigners();
 
-    const TaskControl = await hre.ethers.getContractFactory("DefaultTaskControlWithToken");
+    const TaskControl = await hre.ethers.getContractFactory("TaskControlWithToken");
     const taskControl = await TaskControl.deploy(redEnvelopeAddr,true,true);
     await taskControl.waitForDeployment();
 

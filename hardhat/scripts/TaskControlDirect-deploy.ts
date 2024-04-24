@@ -5,7 +5,7 @@ import {
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 export type {
     TaskControlDirect
-} from "../typechain-types/contracts";
+} from "../typechain-types";
 
   export async function deployTaskControlDirect() {
     const  luckyRedEnvelope  = await loadFixture(deployRedEnvelope);

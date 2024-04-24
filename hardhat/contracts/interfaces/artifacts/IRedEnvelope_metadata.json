@@ -1,0 +1,406 @@
+{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_receiveAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ticketNumbers",
+						"type": "uint256"
+					}
+				],
+				"name": "buyTickets",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "claimPrize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxTickets",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxPrizeNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_secret",
+						"type": "uint256"
+					}
+				],
+				"name": "createRedEnvelope",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ticketPirce",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxTickets",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxPrizeNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_injectAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_injectTicketNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_sendAllowAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_secret",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_autoClaim",
+						"type": "bool"
+					}
+				],
+				"name": "createRedEnvelopeDetail",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_nonce",
+						"type": "uint256"
+					}
+				],
+				"name": "drawPrize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "endRedEnvelope",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ticketNumbers",
+						"type": "uint256"
+					}
+				],
+				"name": "injectTickets",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_receiveAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ticketNumbers",
+						"type": "uint256"
+					}
+				],
+				"name": "sendTickets",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "viewCurrentRedEnvelopeId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "viewRedEnvelope",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "ticketToken",
+								"type": "address"
+							},
+							{
+								"internalType": "enum Status",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "endTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxTickets",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "maxPrizeNum",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "buyTickets",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "sendTickets",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "injectTickets",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "userAddrNum",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "userTxNum",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "injectAddrNum",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "ticketPirce",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "sendAllowAddr",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "secret",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "autoClaim",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct RedEnvelope",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "viewRedEnvelopeClaimPrize",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "viewRedEnvelopeStatus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"createRedEnvelope(uint256,uint256,uint256,uint256)": {
+					"details": "Callable by operator",
+					"params": {
+						"_endTime": ": endTime of the RedEnvelope，0 = no limit",
+						"_maxPrizeNum": ": prize num of the RedEnvelope，0为100%中奖",
+						"_maxTickets": ": max ticket of the RedEnvelope，0 = no limit",
+						"_secret": ": "
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"createRedEnvelope(uint256,uint256,uint256,uint256)": {
+					"notice": "create the RedEnvelope，采用默认代币地址及配置，默认为仅支持buyTickets模式"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IRedEnvelope.sol": "IRedEnvelope"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IRedEnvelope.sol": {
+			"keccak256": "0xc9370837daca0ac577711dc4097591e28984de8da3586d6790ebdde4226b2038",
+			"license": "BUSL-1.1",
+			"urls": [
+				"bzz-raw://c4fd858e88a47a15aade36a54387306c8b5226797490411f69f2ccddb30dec89",
+				"dweb:/ipfs/QmTzQ58gKgFNJdaeAxWdN1qpH761jSLusSrBmhRJs7cx1U"
+			]
+		}
+	},
+	"version": 1
+}

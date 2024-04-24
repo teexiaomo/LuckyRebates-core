@@ -6,7 +6,7 @@ import {
 
 export type {
     EmptyTask,
-    } from "../typechain-types/contracts/task/EmptyTask";
+    } from "../typechain-types";
 
   export async function deployEmptyTask() {
 

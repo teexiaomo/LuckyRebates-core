@@ -1,0 +1,75 @@
+{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "runTask",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/ITask.sol": "Itask"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/ITask.sol": {
+			"keccak256": "0xf6d9c53703d99231f19a99b9075e76b3686a87ded7319373cc3d3b6053788f6c",
+			"license": "BUSL-1.1",
+			"urls": [
+				"bzz-raw://0a3b3bce0b4f17182ec6735ecb31196e3d3f99803247550e4391c9bebc271255",
+				"dweb:/ipfs/QmbN11b85wT3vfR1yr9U2vMpph9ZbX8wHbRxxkPzcknGZh"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: TaskControlWithToken
+    network: sepolia
+    source:
+      address: "0xA2A0aC18F965E03443efdd2dfeA3990c07b076E8"
+      abi: TaskControlWithToken
+      startBlock: 5750578
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - OwnershipTransferred
+        - TaskAdd
+        - TicketGet
+        - TokenMint
+        - Transfer
+      abis:
+        - name: TaskControlWithToken
+          file: ./abis/TaskControlWithToken.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: TaskAdd(address,uint256)
+          handler: handleTaskAdd
+        - event: TicketGet(uint256,address,address,uint256,uint256,bool)
+          handler: handleTicketGet
+        - event: TokenMint(address,address,address,uint256)
+          handler: handleTokenMint
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/task-control-with-token.ts
