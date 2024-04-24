@@ -41,7 +41,7 @@ Try running some of the following tasks:
 ### 任务积分模式  
  + 用户参与任务，完成时获得积分
  + 用户可选择消耗积分，通过任务管理器参与指定红包活动
- + 参考DefaultTaskControlWithToken.sol实现
+ + 参考TaskControlWithToken.sol实现
   
 ## 任务
   + 可支持各种链上活动，需绑定到任务控制器
