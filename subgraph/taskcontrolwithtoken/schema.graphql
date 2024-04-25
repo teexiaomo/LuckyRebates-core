@@ -1,3 +1,13 @@
+type UserInfo @entity{
+  id: Bytes!  #用户地址
+  balance: BigInt!
+  tokenMintList: [TokenMint!] @derivedFrom(field: "userInfo")  #完成任务，获取token的记录
+  ticketGetList: [TicketGet!] @derivedFrom(field: "userInfo")  #token消耗的记录
+  #暂不关联普通tansfer
+  #fromTransferList:[Transfer!]  @derivedFrom(field: "fromUserInfo")  #获取token记录
+  #toTransferList:[Transfer!]  @derivedFrom(field: "toUserInfo")  #消耗token记录
+}
+
 type Approval @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address
@@ -19,6 +29,7 @@ type OwnershipTransferred @entity(immutable: true) {
 
 type TaskAdd @entity(immutable: true) {
   id: Bytes!
+  operatorAddress:Bytes!
   taskAddr: Bytes! # address
   weight: BigInt! # uint256
   blockNumber: BigInt!
@@ -28,7 +39,7 @@ type TaskAdd @entity(immutable: true) {
 
 type TicketGet @entity(immutable: true) {
   id: Bytes!
-  TaskControlWithToken_id: BigInt! # uint256
+  redEnvelope: BigInt! # uint256
   fromAddress: Bytes! # address
   receiveAddress: Bytes! # address
   amount: BigInt! # uint256
@@ -37,6 +48,7 @@ type TicketGet @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  userInfo:UserInfo!  #关联消耗token的地址
 }
 
 type TokenMint @entity(immutable: true) {
@@ -48,6 +60,7 @@ type TokenMint @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  userInfo:UserInfo!  #关联获取token的地址
 }
 
 type Transfer @entity(immutable: true) {

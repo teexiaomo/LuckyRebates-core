@@ -4,7 +4,8 @@ import {
   TaskAdd as TaskAddEvent,
   TicketGet as TicketGetEvent,
   TokenMint as TokenMintEvent,
-  Transfer as TransferEvent
+  Transfer as TransferEvent,
+  TaskControlWithToken
 } from "../generated/TaskControlWithToken/TaskControlWithToken"
 import {
   Approval,
@@ -12,7 +13,8 @@ import {
   TaskAdd,
   TicketGet,
   TokenMint,
-  Transfer
+  Transfer,
+  UserInfo
 } from "../generated/schema"
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -50,6 +52,7 @@ export function handleTaskAdd(event: TaskAddEvent): void {
   let entity = new TaskAdd(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.operatorAddress = event.transaction.from
   entity.taskAddr = event.params.taskAddr
   entity.weight = event.params.weight
 
@@ -61,10 +64,18 @@ export function handleTaskAdd(event: TaskAddEvent): void {
 }
 
 export function handleTicketGet(event: TicketGetEvent): void {
+  let userInfo = UserInfo.load(event.params.fromAddress)
+  if (userInfo == null){
+    userInfo = new UserInfo(event.params.fromAddress)
+  }
+  let contract = TaskControlWithToken.bind(event.address)
+  userInfo.balance  = contract.balanceOf(event.params.fromAddress)
+  userInfo.save()
+
   let entity = new TicketGet(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.TaskControlWithToken_id = event.params.id
+  entity.redEnvelope = event.params.id
   entity.fromAddress = event.params.fromAddress
   entity.receiveAddress = event.params.receiveAddress
   entity.amount = event.params.amount
@@ -74,11 +85,20 @@ export function handleTicketGet(event: TicketGetEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+  entity.userInfo = event.params.fromAddress
 
   entity.save()
 }
 
 export function handleTokenMint(event: TokenMintEvent): void {
+  let userInfo = UserInfo.load(event.params.receiveAddress)
+  if (userInfo == null){
+    userInfo = new UserInfo(event.params.receiveAddress)
+  }
+  let contract = TaskControlWithToken.bind(event.address)
+  userInfo.balance  = contract.balanceOf(event.params.receiveAddress)
+  userInfo.save()
+
   let entity = new TokenMint(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -90,7 +110,7 @@ export function handleTokenMint(event: TokenMintEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
+  entity.userInfo = event.params.receiveAddress
   entity.save()
 }
 

@@ -5,6 +5,10 @@
 ### token（U） address:
 0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
 
+### WETH address:
+0xccCf545cf03aA6A9E14e8c7bD4D46cb249b45B1e
+1000000000000000000
+
 ### LuckyRedEnvelopeV1 address:
 0xdF8167f047A8eD3D9F876F7FF869cb86452c8E88
 
@@ -13,26 +17,27 @@
 已绑定操作员地址
 
 ### TaskControlDirect address:
-0xDC3A3f30fCE9b3Ba86363f6858910d48B8f3a37D
-已转账100U
-已绑定EmptyTask，权重为1
-已绑定PayTask，权重为1
+0x8F1BA803E5C9691F2B0ebe3230B3bA2F0819B9fa
+已绑定EmptyTask，权重为1^18
 
 ### TaskControlWithToken address:
 0xA2A0aC18F965E03443efdd2dfeA3990c07b076E8
 已转账500U
 已设置price为1000000
-0x10e474732c98960AF2e612A720c966d8203ed43a
-
+已绑定EmptyTask，权重为1
+已绑定PayTask，权重为1
+已绑定WhileListTask，权重为1
 
 ### EmptyTask address:
 0x10e474732c98960AF2e612A720c966d8203ed43a
 
-## PayTask address:
+### PayTask address:
 0x5e8cAB19578CAa8E5Bc4d65cb2843d5CCB99Ce20
 支持支付代币（U）:0x314765C2B696e7Ac04e8c61f65aE0372eb33F060
 
-
+### WhileListTask address:
+0x191dD57a45A4C216C6D0DefcC011EA6C2058fb02
+已绑定操作员:0xEF48A41d7882B31E680483C9c6E17F0Cb125CF38
 
 ## 操作员地址
 *LuckyRedEnvelopeV2:*
@@ -50,19 +55,25 @@
 ### 创建及处理红包
 + 通过红包合约操作员地址直接调用LuckyRedEnvelopeV2合约接口
 
-### 任务积分模式
+
+
+### 任务积分模式(buy模式)
 #### 用户获取奖注token
 + 用户（前端）直接调用TaskControlWithToken合约的mintToken接口,可根据用户参与的任务选择传入具体的task合约地址
 
 #### 用户注销奖注token参与红包
 + 用户（前端）直接调用TaskControlWithToken合约的getTicket接口,将会消耗1*10^decimals个token换取1注具体红包活动
++ 可用红包id:3
 
-### 直接投注模式
+
+
+
+### 直接投注模式(send模式)
 #### 用户直接参与任务获取指定红包投注
 + 用户（前端）直接调用TaskControlDirect合约的getTicket接口,可根据用户参与的任务选择传入具体的task合约地址
 + 需传入红包id，完成指定任务后将直接获取对应数量的红包投注
-+ 获取的红包投注数量取决于任务权重及预设价格
-
++ 获取的红包投注数量取决于任务权重及预设decimals
++ 已绑定红包id:2,已注入0.1weth
 
 
 

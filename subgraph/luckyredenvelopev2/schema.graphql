@@ -2,7 +2,7 @@
 type UserInfo @entity{
   id: Bytes!  #用户地址
   ticketsPurchaseList: [TicketsPurchase!]  @derivedFrom(field: "userInfo")  #购注记录
-  TicketsGetList:[TicketsGet!]  @derivedFrom(field: "userInfo")  #领取记录
+  ticketsGetList:[TicketsGet!]  @derivedFrom(field: "userInfo")  #领取记录
   prizeDrawnList: [PrizeDrawn!]  @derivedFrom(field: "userInfo")  #中奖记录
   claimPrizeList: [ClaimPrize!]  @derivedFrom(field: "userInfo")  #领取记录
 }
