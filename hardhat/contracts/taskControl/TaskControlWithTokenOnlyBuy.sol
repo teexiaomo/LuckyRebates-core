@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// Compatible with OpenZeppelin Contracts ^5.0.0
+// Compatible with OpenZeppelin Contracts ^4.0.0
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../interfaces/IRedEnvelope.sol";
+import "../interfaces/ITokenGift.sol";
 
 import "./TaskControlWithToken.sol";
 
@@ -14,36 +14,30 @@ contract TaskControlWithTokenOnlyBuy is TaskControlWithToken {
     address public reserveAddr;
 
 
-    constructor(address _redEnvelopeAddr,address _ticketToken,address _reserveAddr,uint256 _ticketPirce)
-        TaskControlWithToken(_redEnvelopeAddr,true,false)
+    constructor(address _tokenGiftAddr,address _ticketToken,address _reserveAddr,uint256 _ticketPirce)
+        TaskControlWithToken(_tokenGiftAddr,true,false)
     {
         ticketToken = _ticketToken;
         ticketPirce = _ticketPirce;
         reserveAddr = _reserveAddr;
     }
 
-    function mintToken(address _taskAddr,address _receiveAddress,bytes calldata _data) external virtual override nonReentrant{
-        require(this.getTask(_taskAddr) != 0,"no set as task");
-
-        //实际铸造token数为runTask返回值*权重
-        uint256 amount = ItaskCallee(_taskAddr).taskCall(address(msg.sender),_data) * this.getTask(_taskAddr);
-        _mint(_receiveAddress, amount);
+    function mintToken(address _taskAddr,address _receiveAddress,bytes calldata _data) external virtual override payable nonReentrant{
+        uint256 amount = _mintToken(_taskAddr,_receiveAddress,_data);
 
         //需要转入对应价值的红包token的保证金
         uint256 ticketAmount = amount * ticketPirce / (10 ** decimals());
         IERC20(ticketToken).safeTransferFrom(reserveAddr,address(this),ticketAmount);  
-        emit TokenMint(address(msg.sender),_taskAddr,_receiveAddress,amount);
     }
 
     function _buyTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)internal{
-        RedEnvelope memory redEnvelope = IRedEnvelope(redEnvelopeAddr).viewRedEnvelope(_id);
-        require(redEnvelope.ticketToken == ticketToken,"ticketToken err.no suport RedEnvelope token");
-        require(redEnvelope.ticketPirce == ticketPirce,"ticketPirce err.no suport RedEnvelope token");
-        require(redEnvelope.sendAllowAddr == address(0),"only buy model");
+        require(tokenGift.viewTokenGiftTicketToken(_id) == ticketToken,"ticketToken err.no suport tokenGift token");
+        require(tokenGift.viewTokenGiftTicketPrice(_id) == ticketPirce,"ticketPirce err.no suport tokenGift token");
+        require(tokenGift.viewTokenGiftModel(_id)== ITokenGift.Model.BuyModel,"only buy model");
         
-        uint256 approveAmount = redEnvelope.ticketPirce * _ticketNumbers;
-        IERC20(redEnvelope.ticketToken).approve(redEnvelopeAddr,approveAmount);       
-        IRedEnvelope(redEnvelopeAddr).buyTickets(_id,_receiveAddress,_ticketNumbers);
+        uint256 approveAmount = ticketPirce * _ticketNumbers;
+        IERC20(ticketToken).approve(address(tokenGift),approveAmount);       
+        tokenGift.buyTickets(_id,_receiveAddress,_ticketNumbers);
     }
 
 

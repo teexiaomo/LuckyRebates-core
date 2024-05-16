@@ -1,5 +1,5 @@
 import hre from "hardhat";
-import {deployRedEnvelope} from "./LuckyRedEnvelopeV2-deploy"
+import {deployLuckyTokenGift} from "./LuckyTokenGift-deploy"
 import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
@@ -8,14 +8,14 @@ export type {
 } from "../typechain-types";
 
   export async function deployTaskControlWithToken() {
-    const  luckyRedEnvelope  = await loadFixture(deployRedEnvelope);
+    const  luckyTokenGift  = await loadFixture(deployLuckyTokenGift);
     //const { myToken } = await deployMyToken();
-    const redEnvelopeAddr = await luckyRedEnvelope.getAddress();
+    const luckyTokenGiftAddr = await luckyTokenGift.getAddress();
 
     const [owner, otherAccount] = await hre.ethers.getSigners();
 
     const TaskControl = await hre.ethers.getContractFactory("TaskControlWithToken");
-    const taskControl = await TaskControl.deploy(redEnvelopeAddr,true,true);
+    const taskControl = await TaskControl.deploy(luckyTokenGiftAddr,true,true);
     await taskControl.waitForDeployment();
 
     //const address = await taskControl.getAddress();

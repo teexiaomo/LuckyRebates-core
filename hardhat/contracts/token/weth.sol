@@ -1,70 +1,29 @@
-/**
- *Submitted for verification at Etherscan.io on 2023-03-14
-*/
+// SPDX-License-Identifier: MIT
+// Compatible with OpenZeppelin Contracts ^5.0.0
+pragma solidity ^0.8.19;
 
-// File: contracts/mocks/WETH.sol
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-pragma solidity 0.7.5;
+contract WETH is ERC20 {
+    event Deposit(address indexed from, uint256 amount);
+    event Withdraw(address indexed to, uint256 amount);
 
-// solhint-disable
-contract WETH {
-    string public name     = "Wrapped Ether";
-    string public symbol   = "WETH";
-    uint8  public decimals = 18;
+    constructor()
+        ERC20("Wrapped Ether", "WETH")  
+    {
+    }
+    function deposit() public payable {
+        _mint(msg.sender, msg.value);
+        emit Deposit(msg.sender, msg.value);
+    }
 
-    event  Approval(address indexed src, address indexed guy, uint wad);
-    event  Transfer(address indexed src, address indexed dst, uint wad);
-    event  Deposit(address indexed dst, uint wad);
-    event  Withdrawal(address indexed src, uint wad);
-
-    mapping (address => uint)                       public  balanceOf;
-    mapping (address => mapping (address => uint))  public  allowance;
+    function withdraw(uint256 amount) external {
+        _burn(msg.sender, amount);
+        payable(msg.sender).transfer(amount);
+        emit Withdraw(msg.sender, amount);
+    }
 
     receive() external payable {
         deposit();
     }
-    function deposit() public payable {
-        balanceOf[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
-    }
-    function withdraw(uint wad) public {
-        require(balanceOf[msg.sender] >= wad);
-        balanceOf[msg.sender] -= wad;
-        msg.sender.transfer(wad);
-        emit Withdrawal(msg.sender, wad);
-    }
-
-    function totalSupply() public view returns (uint) {
-        return address(this).balance;
-    }
-
-    function approve(address guy, uint wad) public returns (bool) {
-        allowance[msg.sender][guy] = wad;
-        emit Approval(msg.sender, guy, wad);
-        return true;
-    }
-
-    function transfer(address dst, uint wad) public returns (bool) {
-        return transferFrom(msg.sender, dst, wad);
-    }
-
-    function transferFrom(address src, address dst, uint wad)
-        public
-        returns (bool)
-    {
-        require(balanceOf[src] >= wad);
-
-        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
-            require(allowance[src][msg.sender] >= wad);
-            allowance[src][msg.sender] -= wad;
-        }
-
-        balanceOf[src] -= wad;
-        balanceOf[dst] += wad;
-
-        emit Transfer(src, dst, wad);
-
-        return true;
-    }
 }
-// solhint-enable

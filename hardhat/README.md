@@ -34,11 +34,11 @@ Try running some of the following tasks:
  + 用户可以选择完成任务控制器绑定的任务，并获取红包的抽奖资格
  + 存在两类任务控制模式
   
-### 直接投注模式
+### 直接投注模式控制器
  + 用户参与任务，完成时通过任务管理器自动投注指定红包活动
  + 参考TaskControlDirect.sol实现
 
-### 任务积分模式  
+### 任务积分模式控制器 
  + 用户参与任务，完成时获得积分
  + 用户可选择消耗积分，通过任务管理器参与指定红包活动
  + 参考TaskControlWithToken.sol实现
@@ -48,6 +48,9 @@ Try running some of the following tasks:
   + 用户完成任务后，理论上即可获得红包的领取资格
   + 已默认实现链上转账任务/链上质押任务/链上打卡任务/空任务
   + 可支持自定义链上任务
+
+## 跨链
+
 
 ## 编译
 ```shell
@@ -70,30 +73,30 @@ yarn hardhat test ./test/eoa-buy.ts
 yarn hardhat test ./test/eoa-send.ts
 ```
 
-通过任务控制器（任务积分模式）测试buy模式
+通过任务积分模式控制器测试buy模式
 ```shell
 yarn hardhat test ./test/taskControlWithToken-buy.ts
 ```
 
-通过任务控制器（任务积分模式）测试send模式
+通过任务积分模式控制器测试send模式
 ```shell
 yarn hardhat test ./test/taskControlWithToken-send.ts
 ```
 
-通过任务控制器（直接投注模式）测试buy模式
+通过直接投注模式控制器测试buy模式
 ```shell
 yarn hardhat test ./test/taskControlDirect-buy.ts
 ```
 
-通过任务控制器（直接投注模式）测试send模式
+通过直接投注模式控制器测试send模式
 ```shell
 yarn hardhat test ./test/taskControlDirect-send.ts
 ```
 
-## 添加task（以任务积分模式为例）
+## 添加task（以任务积分模式控制器为例）
 1. 实现ItaskCallee接口的task合约
 ```
-function taskCall(address sender,bytes calldata data) external  returns(uint256);
+function taskCall(address sender,bytes calldata data) external payable  returns(uint256);
 ```
 
 2. 将实现并部署的task合约绑定到TaskControl合约,设置权重

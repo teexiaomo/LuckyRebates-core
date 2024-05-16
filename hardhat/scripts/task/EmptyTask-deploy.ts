@@ -1,12 +1,12 @@
 import hre from "hardhat";
-import {deployTaskControlWithToken} from "./TaskControlWithToken-deploy"
+import {deployTaskControlWithToken} from "../TaskControlWithToken-deploy"
 import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 export type {
     EmptyTask,
-    } from "../typechain-types";
+    } from "../../typechain-types";
 
   export async function deployEmptyTask() {
 
@@ -26,10 +26,9 @@ export async function bindTaskControlWithToken(){
     
     const emptyTaskAddress = await emptyTask.getAddress();
     const rs = await taskControl.setTask(emptyTaskAddress,1);
-    rs.wait();
-    //const tx = await rs.getTransaction();
-    //console.log('bindTaskControl tx:',tx?.hash);
-    return rs
+    await rs.wait();
+
+    return {emptyTask,taskControl}
 }
 
 //执行部署

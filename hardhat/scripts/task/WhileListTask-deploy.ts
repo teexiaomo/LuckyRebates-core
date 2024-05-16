@@ -1,8 +1,9 @@
 import hre from "hardhat";
-import {deployTaskControlWithToken} from "./TaskControlWithToken-deploy"
+import {deployTaskControlWithToken} from "../TaskControlWithToken-deploy"
 import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+
 
   export async function deployWhileListTask() {
     const [owner, otherAccount] = await hre.ethers.getSigners();
@@ -23,10 +24,10 @@ export async function bindTaskControl(){
     
     const whileListTaskAddress = await whileListTask.getAddress();
     const rs = await taskControl.setTask(whileListTaskAddress,1);
-    rs.wait();
+    await rs.wait();
     //const tx = await rs.getTransaction();
     //console.log('bindTaskControl tx:',tx?.hash);
-    return rs
+    return {whileListTask,taskControl}
 }
 
 //执行部署

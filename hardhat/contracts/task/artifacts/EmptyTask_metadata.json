@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.25+commit.b61c2a91"
+		"version": "0.8.19+commit.7dd6d404"
 	},
 	"language": "Solidity",
 	"output": {
@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_sender",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -26,7 +26,7 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "payable",
 				"type": "function"
 			}
 		],
@@ -45,7 +45,7 @@
 		"compilationTarget": {
 			"contracts/task/EmptyTask.sol": "EmptyTask"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "paris",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -58,19 +58,19 @@
 	},
 	"sources": {
 		"contracts/interfaces/ItaskCallee.sol": {
-			"keccak256": "0x96f9931598e1fad8b2f9c5a1f560835657f1e1be9481ea2fb8f6d1f1f6dd5596",
+			"keccak256": "0xcb09a25b46e587ea8ded91bab938d030b8761e447ade1c024466fcfa3fc4a1b1",
 			"license": "BUSL-1.1",
 			"urls": [
-				"bzz-raw://26f94f8a89fbe5944c9061d2e7c6e55b0e08c707b2eaffdc0d32573edee53a8b",
-				"dweb:/ipfs/QmXFMoPoHe5H42gHtZLDXLPDZQF2wuF9mBhupXURgzPRAs"
+				"bzz-raw://fac5e6922e2cff81fe89f5013c6bdbbf1eec40b84b83b128cf73bfa0f7851b65",
+				"dweb:/ipfs/QmVyB2QPCtQN1ueuSZ7F99Kvmoz2kRUsx9Reqd1o296xJ2"
 			]
 		},
 		"contracts/task/EmptyTask.sol": {
-			"keccak256": "0x16f3fe1094c794b5770b3d2b89ec60299569845cd40968d9a5c39e7d33f22b60",
+			"keccak256": "0xe12f1743a2b072c8cf17d7d8b49b6539f8ebf808e69979c065ff6ccaad235250",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://97e2b4932722816c6197787bdd84bc142bbd0d63cb9c30a09aae53b30a302650",
-				"dweb:/ipfs/QmZ7RDtGQ7P7n6jWhEPULVMCeBcGJU897tr9adqJYvSbgQ"
+				"bzz-raw://b76ce164213e09870ca0183b02234fac02a38c79073f04bb7b66946a6831b674",
+				"dweb:/ipfs/QmfQNpHEj2Fh1Bm6dJxVMWzhvzfVbx9cigAWKubDrV1Cev"
 			]
 		}
 	},
