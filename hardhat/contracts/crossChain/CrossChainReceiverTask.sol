@@ -37,6 +37,9 @@ contract CrossChainReceiverTask is CCIPReceiver,ItaskCallee,Ownable{
     function getCrossChainSender(uint64 _sourceChainSelector,address _crossChainSenderAddr)external view  returns(bool) {
         return crossChainSenderMap[_sourceChainSelector][_crossChainSenderAddr];
     }
+    function updateTaskControl(address _taskControlWithToken) external onlyOwner{
+        taskControlWithToken = ITaskControlWithToken(_taskControlWithToken);
+    }
 
 
 

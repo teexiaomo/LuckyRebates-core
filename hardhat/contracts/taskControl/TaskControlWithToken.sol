@@ -47,6 +47,12 @@ contract TaskControlWithToken is ITaskControlWithToken,ERC20,ReentrancyGuard, ER
     function getTask(address _taskAddr)external view  returns(uint256) {
         return taskMap[_taskAddr];
     }
+    function updateTokenGift(address _tokenGiftAddr,bool _allowBuyTicket,bool _allowSendTicket)external onlyOwner{
+        tokenGift = ITokenGift(_tokenGiftAddr);
+        allowBuyTicket = _allowBuyTicket;
+        allowSendTicket = _allowSendTicket;
+    }
+    
     function _mintToken(address _taskAddr,address _receiveAddress,bytes calldata _data)internal returns(uint256){
         require(taskMap[_taskAddr] != 0,"no set as task");
         uint256 value = ItaskCallee(_taskAddr).taskCall{value: msg.value}(address(msg.sender),_data);

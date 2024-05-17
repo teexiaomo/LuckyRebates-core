@@ -39,6 +39,11 @@ contract TaskControlDirect is ITaskControlDirect,ReentrancyGuard, Ownable {
     function getTask(address _taskAddr)external view  returns(uint256) {
         return taskMap[_taskAddr];
     }
+    function updateTokenGift(address _tokenGiftAddr,bool _allowBuyTicket,bool _allowSendTicket)external onlyOwner{
+        tokenGift = ITokenGift(_tokenGiftAddr);
+        allowBuyTicket = _allowBuyTicket;
+        allowSendTicket = _allowSendTicket;
+    }
 
     function _getTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers)internal returns(bool){
         bool buy = true;

@@ -4,13 +4,14 @@ pragma solidity ^0.8.19;
 interface ITokenGift{
     enum Status {
         Pending,
-        Open,
-        Close,
-        Claimable
+        Open,   //1 开放投注
+        Close,  //2 停止投注,待开奖
+        Claimable   //3 已开奖
     }
     enum Model{
-        BuyModel,
-        SendModel
+        Null,
+        BuyModel,   //1
+        SendModel   //2
     }
     event TokenGiftCreated(
         uint256 indexed id,
@@ -21,7 +22,8 @@ interface ITokenGift{
         uint256 ticketPirce,
         address ticketToken,
         address allowAddr,
-        bool autoClaim
+        bool autoClaim,
+        uint256 secret
     );
 
     event TokenGiftClosed(
@@ -34,7 +36,10 @@ interface ITokenGift{
 
     event TokenGiftClaimable(
         uint256 indexed id,
-        uint256 endTime
+        uint256 endTime,
+        uint256 nonce,  
+        uint256 vrfRandom,
+        uint256 randomResult
     );
 
     //ticketIndex表明购注的起始编号

@@ -90,7 +90,8 @@ describe("task control with token: sends ticket", function (){
             //创建send模式红包，且绑定send地址为taskControl
             const taskControlAddr = await taskControl.getAddress();
             const usdtAddr = await usdt.getAddress();
-            const createTokenGiftDetail = luckyTokenGift.createTokenGiftDetail(usdtAddr,1n,1000000n,0n,0n,20n,ZeroAddress,0n,taskControlAddr,0n,true);
+            let sendModel = 2n;
+            const createTokenGiftDetail = luckyTokenGift.createTokenGiftDetail(usdtAddr,sendModel,1000000n,0n,0n,20n,ZeroAddress,0n,taskControlAddr,0n,true);
             await expect(createTokenGiftDetail).not.to.be.reverted;
             
             await (await createTokenGiftDetail).wait();

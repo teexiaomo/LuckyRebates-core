@@ -51,7 +51,8 @@ describe("TokenGift:send model", function (){
 
             //创建红包，采用send模式，且只允许otherAccount地址send，不限制截止时间及总购注数，最大中奖数为20注
             //在创建时并通过owner地址捐赠10注
-            const createTokenGiftDetail = luckyTokenGift.createTokenGiftDetail(myTokenAddr,1n,1000000n,0n,0n,20n,owner,10n,otherAccount,0n,true);
+            let sendModel = 2n;
+            const createTokenGiftDetail = luckyTokenGift.createTokenGiftDetail(myTokenAddr,sendModel,1000000n,0n,0n,20n,owner,10n,otherAccount,0n,true);
             await expect(createTokenGiftDetail).not.to.be.reverted;
             
             await (await createTokenGiftDetail).wait();

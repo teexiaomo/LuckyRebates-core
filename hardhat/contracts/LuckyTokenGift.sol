@@ -152,7 +152,7 @@ contract LuckyTokenGift is ITokenGift,ReentrancyGuard, Ownable{
         _genTokenGiftCreatedEvent(currentId);
     }
     function _genTokenGiftCreatedEvent(uint256 _id)internal{
-        emit TokenGiftCreated(_id,uint16(tokenGiftIdMap[_id].model),tokenGiftIdMap[_id].endTime,tokenGiftIdMap[_id].maxTickets,tokenGiftIdMap[_id].maxPrizeNum,tokenGiftIdMap[_id].ticketPirce,tokenGiftIdMap[_id].ticketToken,tokenGiftIdMap[_id].allowAddr,tokenGiftIdMap[_id].autoClaim);
+        emit TokenGiftCreated(_id,uint16(tokenGiftIdMap[_id].model),tokenGiftIdMap[_id].endTime,tokenGiftIdMap[_id].maxTickets,tokenGiftIdMap[_id].maxPrizeNum,tokenGiftIdMap[_id].ticketPirce,tokenGiftIdMap[_id].ticketToken,tokenGiftIdMap[_id].allowAddr,tokenGiftIdMap[_id].autoClaim,tokenGiftIdMap[_id].secret);
     }
 
     
@@ -341,12 +341,13 @@ contract LuckyTokenGift is ITokenGift,ReentrancyGuard, Ownable{
     )external virtual override onlyOperator nonReentrant{
         require(tokenGiftIdMap[_id].status == Status.Close, "TokenGift not close");
         tokenGiftIdMap[_id].status = Status.Claimable;
-        emit TokenGiftClaimable(_id,block.timestamp);
+        
         uint256 userTickets = tokenGiftIdMap[_id].buyTickets + tokenGiftIdMap[_id].sendTickets;
         if ( userTickets == 0){
             //返还注入金额
             _returnInject(_id);
             //_removeEnvelope(_id);
+            emit TokenGiftClaimable(_id,block.timestamp,_nonce,0,0);
             return ;
         }
         //check secret
@@ -360,6 +361,8 @@ contract LuckyTokenGift is ITokenGift,ReentrancyGuard, Ownable{
 
         uint256 randomWord = uint256(keccak256(abi.encodePacked(randomWords[0],_nonce)));
         
+        emit TokenGiftClaimable(_id,block.timestamp,_nonce,randomWords[0],randomWord);
+
         uint256 drawNum = userTickets;
         if (drawNum > tokenGiftIdMap[_id].maxPrizeNum && tokenGiftIdMap[_id].maxPrizeNum != 0){
             drawNum = tokenGiftIdMap[_id].maxPrizeNum;

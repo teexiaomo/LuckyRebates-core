@@ -648,6 +648,29 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_tokenGiftAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_allowBuyTicket",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "_allowSendTicket",
+						"type": "bool"
+					}
+				],
+				"name": "updateTokenGift",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_token",
 						"type": "address"
 					},
@@ -841,11 +864,11 @@
 			]
 		},
 		"contracts/interfaces/ITokenGift.sol": {
-			"keccak256": "0xb7fd01bfbae765a9edb3b0edef2fe36eb38a9bb2a06fa59e11ac08b732b0148e",
+			"keccak256": "0x5b922b6c6117474ced539752b0e36447a29b01b0b14e65731bbf0490c9502118",
 			"license": "BUSL-1.1",
 			"urls": [
-				"bzz-raw://54f4b9f74cb7e24dbad5fcf7ddd7697ccdbf2c315e5ce1c1dce6264fc972bf25",
-				"dweb:/ipfs/QmXsPtoEiwHJc5NXSwP3sJGHDWEWEtSFj6QZh7uKcCzCPX"
+				"bzz-raw://354a07e3e6f9a31f952dafb7f3d11ed94f2612021891c2a67ab3e9691b62abfd",
+				"dweb:/ipfs/QmUBw5DdgAJnN4ehXcn4yD2vPFDtWCETV1D78xkZcVmSr7"
 			]
 		},
 		"contracts/interfaces/ItaskCallee.sol": {
@@ -857,11 +880,11 @@
 			]
 		},
 		"contracts/taskControl/TaskControlWithToken.sol": {
-			"keccak256": "0x19c1627cf36ad2d5a184874af835a61d9890cfa1444d3005cdb8d5fc2a19c1c9",
+			"keccak256": "0x14363ecff06fba8f5b1b7de0bbdd5f999097ec49dbec5b47b3bd0dd318159eca",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4ed94338a6b2178c5e192a8b600f62233bff62c06ca1269ce1ccf3280a4a18a7",
-				"dweb:/ipfs/QmYJCckGa2oqg7uRFC9BtQdaCfgrWhvzskzFvYw7xeViMw"
+				"bzz-raw://ca3e8af3a7db84cfea4cc3e7bfe525922aa738d9cc596f54220d6011f9e13cee",
+				"dweb:/ipfs/QmW7TqTUtHxuqw5RMe8mdqNPtTGCtNNHPKHpJNM6MSg1u1"
 			]
 		}
 	},

@@ -1,8 +1,0 @@
-{
-  "sepolia": {
-    "TaskControlWithToken": {
-      "address": "0xA2A0aC18F965E03443efdd2dfeA3990c07b076E8",
-      "startBlock": 5750578
-    }
-  }
-}
