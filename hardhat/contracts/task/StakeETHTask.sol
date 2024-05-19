@@ -3,8 +3,8 @@
 pragma solidity ^0.8.19;
 
 import "../interfaces/ItaskCallee.sol";
-import "../token/Weth.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 //若taskControl注册该合约，则通过该合约进行eth质押，可领取task token
 contract StakeETHTask is ItaskCallee, ERC20{
