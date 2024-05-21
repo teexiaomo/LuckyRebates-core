@@ -5,30 +5,30 @@ import {
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 export type {
-    EmptyTask,
+    StakeETHTask,
     } from "../../typechain-types";
 
-  export async function deployEmptyTask() {
+  export async function deployStakeETHTask() {
 
-    const EmptyTask = await hre.ethers.getContractFactory("EmptyTask");
-    const emptyTask = await EmptyTask.deploy();
-    await emptyTask.waitForDeployment();
+    const StakeETHTask = await hre.ethers.getContractFactory("StakeETHTask");
+    const stakeETHTask = await StakeETHTask.deploy();
+    await stakeETHTask.waitForDeployment();
 
 
     //const address = await whileListTask.getAddress();
     //console.log('whileListTask address:',address);
 
-    return  emptyTask;
+    return  stakeETHTask;
 }
-export async function bindEmptyTask(){
-    const  emptyTask  = await loadFixture(deployEmptyTask);
+export async function bindStakeETHTask(){
+    const  stakeETHTask  = await loadFixture(deployStakeETHTask);
     const  taskControl  = await loadFixture(deployTaskControlWithToken);
     
-    const emptyTaskAddress = await emptyTask.getAddress();
-    const rs = await taskControl.setTask(emptyTaskAddress,1);
+    const stakeETHTaskAddress = await stakeETHTask.getAddress();
+    const rs = await taskControl.setTask(stakeETHTaskAddress,1);
     await rs.wait();
 
-    return {emptyTask,taskControl}
+    return {stakeETHTask,taskControl}
 }
 
 //执行部署

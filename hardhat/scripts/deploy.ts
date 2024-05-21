@@ -2,7 +2,7 @@ import hre from "hardhat";
 import {deployTetherUSD} from "./TetherUSD-deploy"
 import {deployTaskControlWithToken} from "./TaskControlWithToken-deploy"
 import { deployLuckyTokenGift } from "./LuckyTokenGift-deploy";
-import { deployWhileListTask,bindTaskControl } from "./task/WhileListTask-deploy";
+import { deployWhileListTask } from "./task/WhileListTask-deploy";
 import {
     loadFixture,
   } from "@nomicfoundation/hardhat-toolbox/network-helpers";

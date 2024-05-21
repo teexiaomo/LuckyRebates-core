@@ -18,7 +18,7 @@ import {
 
     return  whileListTask;
 }
-export async function bindTaskControl(){
+export async function bindWhileListTask(){
     const  whileListTask  = await loadFixture(deployWhileListTask);
     const  taskControl  = await loadFixture(deployTaskControlWithToken);
     
