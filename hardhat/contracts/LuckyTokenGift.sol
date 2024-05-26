@@ -209,15 +209,15 @@ contract LuckyTokenGift is ITokenGift,ReentrancyGuard, Ownable{
 
         // Transfer cake tokens to this contract
         IERC20(tokenGiftIdMap[_id].ticketToken).safeTransferFrom(address(_injectAddress), address(this), amountTokenToTransfer);
-        tokenGiftIdMap[currentId].injectTickets += _ticketNumbers;
+        tokenGiftIdMap[_id].injectTickets += _ticketNumbers;
 
-        if ( injectTicketMap[currentId][_injectAddress] == 0){
-            injectAddrIndex[currentId][tokenGiftIdMap[currentId].injectAddrNum] = _injectAddress;
-            tokenGiftIdMap[currentId].injectAddrNum += 1;
+        if ( injectTicketMap[_id][_injectAddress] == 0){
+            injectAddrIndex[_id][tokenGiftIdMap[_id].injectAddrNum] = _injectAddress;
+            tokenGiftIdMap[_id].injectAddrNum += 1;
         }
-        injectTicketMap[currentId][_injectAddress] += _ticketNumbers;
+        injectTicketMap[_id][_injectAddress] += _ticketNumbers;
 
-        emit TicketsInject(currentId,address(_injectAddress),_ticketNumbers);
+        emit TicketsInject(_id,address(_injectAddress),_ticketNumbers);
     }
 
     function _fillTicket(uint256 _id,address _receiveAddress,uint256 _ticketNumbers,bool _buy)internal returns(uint256){
@@ -370,6 +370,9 @@ contract LuckyTokenGift is ITokenGift,ReentrancyGuard, Ownable{
 
         //计算中奖值
         uint256 totalTickets = tokenGiftIdMap[_id].injectTickets + tokenGiftIdMap[_id].buyTickets;
+        if (totalTickets == 0 ){
+            return ;
+        }
         uint256 amountToken =  tokenGiftIdMap[_id].ticketPirce * totalTickets; 
         uint256[] memory randomsAmount = _getSortRandoms(randomWord,drawNum,amountToken);
 
