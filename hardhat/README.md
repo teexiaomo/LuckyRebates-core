@@ -2,6 +2,8 @@
 
 
 Try running some of the following tasks:
+## deployment
+![deployment](./deployment.png)
 
 ## 红包介绍
 ### 中奖设置：
@@ -22,14 +24,14 @@ Try running some of the following tasks:
  + 抽奖总额度 = 捐赠额度
  + 参与抽奖奖注数 = 派发奖注数
  + 适合存在第三方指定营销的场景，由第三方设置（捐赠）奖金池，并指定许可内的用户参与抽奖
- + 仅能通过createRedEnvelopeDetail创建，且必须绑定sendAllowAddr地址
- + 仅允许sendAllowAddr地址向第三方赠送奖注
+ + 仅能通过createRedEnvelopeDetail创建，且必须绑定allowAddr地址
+ + 仅允许allowAddr地址向第三方赠送奖注
  + 推荐将*任务控制器*设置为sendAllowAddr地址
 
 
   
 ## 任务控制器
- + 可作为一类特殊的sendAllowAddr地址，绑定具体红包，用于规定该红包的派发规则
+ + 可作为一类特殊的allowAddr地址，绑定具体红包，用于规定该红包的派发规则
  + 可绑定多类型任务，并为这类任务设置相应的权重
  + 用户可以选择完成任务控制器绑定的任务，并获取红包的抽奖资格
  + 存在两类任务控制模式
